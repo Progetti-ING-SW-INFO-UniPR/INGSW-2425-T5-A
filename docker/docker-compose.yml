@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-app
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2222:22"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - webnet
+
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile-db
+    ports:
+      - "3306:3306"
+      - "2223:22"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpasw
+      MYSQL_DATABASE: AstroAllies_DB
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpasw
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - webnet
+
+volumes:
+  db_data:
+
+networks:
+  webnet:

@@ -1,0 +1,23 @@
+FROM php:8.2-fpm
+
+RUN apt-get update && apt-get install -y \
+    nginx \
+    openssh-server \
+    curl \
+    unzip \
+    nano \
+    default-mysql-client \
+    && docker-php-ext-install mysqli pdo pdo_mysql
+
+# Setup SSH
+RUN echo 'root:rootpass' | chpasswd \
+ && mkdir /var/run/sshd \
+ && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# Copy nginx config
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Set workdir
+WORKDIR /var/www/html
+
+CMD service ssh start && service nginx start && php-fpm
