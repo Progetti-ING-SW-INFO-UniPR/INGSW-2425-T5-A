@@ -1,40 +1,37 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile-app
-    ports:
-      - "80:80"
-      - "443:443"
-      - "2222:22"
-    volumes:
-      - .:/var/www/html
-    depends_on:
-      - db
-    networks:
-      - webnet
-
-  db:
-    build:
-      context: .
-      dockerfile: Dockerfile-db
+  aa_db:
+    build: ./database
+    container_name: aa_db
     ports:
       - "3306:3306"
-      - "2223:22"
+      - "2222:22"
     environment:
-      MYSQL_ROOT_PASSWORD: rootpasw
+      MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: AstroAllies_DB
-      MYSQL_USER: user
-      MYSQL_PASSWORD: userpasw
     volumes:
-      - db_data:/var/lib/mysql
+      - aa_db_data:/var/lib/mysql
     networks:
-      - webnet
+      - aa_network
+
+  aa_app:
+    build: ./webserver
+    container_name: aa_app
+    ports:
+      - "8080:80"
+      - "8443:443"
+      - "2223:22"
+    volumes:
+      - ./webserver/AstroAllies:/var/www/html
+    depends_on:
+      - aa_db
+    networks:
+      - aa_network
 
 volumes:
-  db_data:
+  aa_db_data:
 
 networks:
-  webnet:
+  aa_network:
+    driver: bridge
