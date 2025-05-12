@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://localhost:8443%{REQUEST_URI} [L,R=301]
