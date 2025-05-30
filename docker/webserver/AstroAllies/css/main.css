@@ -1,0 +1,193 @@
+:root {
+	font-size: small;
+	background-color: var(--bg);
+	color: white;
+	font-family: 'Comfortaa';
+	--animation-time-factor: 1.5;
+	--bg: rgb(0, 0, 21);
+	--ast-size: 6rem;
+	--ast-color: #e8e8e8;
+	--bg2: #000000bb;
+}
+
+.user {
+	font-size: 3rem;
+	padding: 1rem;
+	right: 0px;
+	position: absolute;
+	background-color: var(--bg2);
+	width: fit-content;
+	height: fit-content;
+	box-sizing: border-box;
+	border: 0.4rem solid;
+	border-radius: 1rem;
+	margin: 1rem;
+}
+
+.menu {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	margin: auto;
+	width: fit-content;
+	height: fit-content;
+	padding: 5rem;
+	border-radius: 5rem;
+	background-color: var(--bg2);
+	border: solid 0.5rem;
+	/* border: solid red; */
+}
+
+.title {
+	font-size: 10rem;
+	left: 0px;
+	right: 0px;
+	margin: auto;
+	width: fit-content;
+	font-weight: bolder;
+	margin-bottom: 5rem;
+	/* border: solid red; */
+}
+
+.link {
+	left: 0px;
+	right: 0px;
+	margin: auto;
+	width: fit-content;
+	margin-top: 2rem;
+}
+
+.link a {
+	color: white;
+	text-decoration: none;
+	font-size: 4rem;
+	font-weight: lighter;
+}
+.link {
+	transition: transform 0.2s;
+	transition-timing-function: ease-in;
+}
+.link:hover {
+	transform: scale(1.1);
+	transition: transform 0.3s;
+	transition-timing-function: ease;
+}
+
+/************* BACKGROUND *****************/
+
+.bg {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	overflow: hidden;
+	/* border: solid red; */
+	background-image: url("../src/bg.png");
+	background-size:30%;
+}
+
+.ast {
+	position: absolute;
+	width: var(--ast-size);
+	height: var(--ast-size);
+	top: calc(var(--ast-size)*-1.5);
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+    background: var(--ast-color);
+	/* border: solid red; */
+}
+
+.ast:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;    
+    border-bottom: calc(var(--ast-size)*0.29) solid var(--ast-color);
+    border-left: calc(var(--ast-size)*0.29) solid var(--bg);
+    border-right: calc(var(--ast-size)*0.29) solid var(--bg);
+        width: calc(var(--ast-size)*0.43);
+    height: 0;
+}
+
+.ast:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;    
+    border-top: calc(var(--ast-size)*0.29) solid var(--ast-color);
+    border-left: calc(var(--ast-size)*0.29) solid var(--bg);
+    border-right: calc(var(--ast-size)*0.29) solid var(--bg);
+    width: calc(var(--ast-size)*0.43);
+    height: 0;
+}
+
+.ast:nth-child(even) {
+	animation-name: ast-even;
+}
+
+.ast:nth-child(odd) {
+	animation-name: ast-odd;
+}
+
+.ast:nth-child(10n) {
+	right: -100vw;
+	animation-delay: 6s;
+	animation-duration: calc(11s * var(--animation-time-factor));
+}
+.ast:nth-child(10n-1) {
+	right: -80vw;
+	animation-delay: 3s;
+	animation-duration: calc(13s * var(--animation-time-factor));
+}
+.ast:nth-child(10n-2) {
+	right: -60vw;
+	animation-delay: 7s;
+	animation-duration: calc(15s * var(--animation-time-factor));
+}
+.ast:nth-child(10n-3) {
+	right: -40vw;
+	animation-delay: 0s;
+	animation-duration: calc(13s * var(--animation-time-factor));
+}
+.ast:nth-child(10n-4) {
+	right: -20vw;
+	animation-delay: 15s;
+	animation-duration: calc(11s * var(--animation-time-factor));
+}
+.ast:nth-child(10n-5) {
+	right: 0vw;
+	animation-delay: 10s;
+	animation-duration: calc(13s * var(--animation-time-factor));
+}
+.ast:nth-child(10n-6) {
+	right: 20vw;
+	animation-delay: 12s;
+	animation-duration: calc(15s * var(--animation-time-factor));
+}
+.ast:nth-child(10n-7) {
+	right: 40vw;
+	animation-delay: 4s;
+	animation-duration: calc(13s * var(--animation-time-factor));
+}
+.ast:nth-child(10n-8) {
+	right: 60vw;
+	animation-delay: 9s;
+	animation-duration: calc(11s * var(--animation-time-factor));
+}
+.ast:nth-child(10n-9) {
+	right: 80vw;
+	animation-delay: 13s;
+	animation-duration: calc(13s * var(--animation-time-factor));
+}
+
+@keyframes ast-odd {
+	from {transform: none;}
+	to {transform: translate(-200vw, 200vh) rotate(180deg);}
+}
+@keyframes ast-even {
+	from {transform: none;}
+	to {transform: translate(-200vw, 200vh) rotate(-180deg);}
+}
