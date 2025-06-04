@@ -23,16 +23,15 @@
 	<div class="user">Nome Utente</div>
 	<div class="menu nosel">
 		<div class="title">Astro Allies</div>
-		<div class="element clickable"><a href="./login.html">Accedi/Registrati</a></div>
 		<!--
 		<div class="element"><a href="">Esci</a></div>
 		-->
-		<div class="element clickable" onclick="toggle('crea')">Crea una Partita</div>
-		<div class="element clickable" onclick="toggle('unisciti')">Unisciti ad una Partita</div>
-		<!--TODO: pop up crea e unisiciti alla partita-->
+		<div class="element clickable"><a href="./login.html">Accedi/Registrati</a></div>
+		<div class="element clickable" onclick="toggle('create')">Crea una Partita</div>
+		<div class="element clickable" onclick="toggle('join')">Unisciti ad una Partita</div>
 		<div class="element clickable"><a href="./scoreboard.html">Classifica Globale</a></div>
 	</div>
-	<div class="shadow" id="crea" onclick="toggle('crea');">
+	<div class="shadow hidden" id="create" onclick="toggle('create');">
 		<div class="menu nosel" onmouseenter="stopProp(this)">
 			<div class="subtitle">Scegli la tua navicella</div>
 			<div class="grid">
@@ -52,6 +51,13 @@
 					<div class="el-desc">4 giocatori</div>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div class="shadow hidden" id="join" onclick="toggle('join');">
+			<div class="menu" onmouseenter="stopProp(this)">
+			<div class="subtitle">Inserisci Codice</div>
+			<div class="element clickable"><input type="text" name="roomid" id="roomid" maxlength="9" autocomplete="off"/></div>
+			<div class="element clickable"><button onclick="join();">Unisciti</button></div>
 		</div>
 	</div>
 </body>

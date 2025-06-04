@@ -13,29 +13,7 @@
 	
 }
 
-body {
-	cursor: url("../src/default.svg") 0 0, default;
-}
-
-.nosel {
-	-webkit-user-select: none; /* Safari */
-	-ms-user-select: none; /* IE 10 and IE 11 */
-	user-select: none; /* Standard syntax */
-}
-
-.user {
-	font-size: 3rem;
-	padding: 1rem;
-	right: 0px;
-	position: absolute;
-	background-color: var(--bg2);
-	width: fit-content;
-	height: fit-content;
-	box-sizing: border-box;
-	border: 0.4rem solid;
-	border-radius: 1rem;
-	margin: 1rem;
-}
+/************************* MENU *************************/
 
 .menu {
 	position: absolute;
@@ -89,14 +67,6 @@ body {
 	text-decoration: none;
 }
 
-.clickable, .clickable a {
-	cursor: url("../src/pointer.svg") 0 0, default;
-}
-
-.clickable:active, .clickable a:active {
-	cursor: url("../src/pointer-click.svg") 0 0, default;
-}
-
 .clickable {
 	transition: transform 0.2s;
 	transition-timing-function: ease-in;
@@ -114,9 +84,52 @@ body {
 	top: 0px;
 	left: 0px;
 	background-color: var(--bg3);
+	transition: transform 0.1s;
 }
 
-/************* GRID *************/
+.hidden {
+	background-color: transparent;
+	transform: scale(0%);
+	transition: transform 0.1s;
+}
+
+/************************* INPUTS *************************/
+.element input, .element button {
+	font-size: 5rem;
+	height: 8rem;
+	border-radius: 4rem;
+	padding: 0.2em;
+	padding-left: 2rem;
+	padding-right: 2rem;
+	text-align: center;
+}
+
+.element input[type='text'] {
+	width: 7em;
+	font-family: 'Courier New', Courier, monospace;
+	background-color: var(--bg);
+	border: solid var(--fg) 0.5rem;
+	font-weight: bold;
+	color: var(--fg);
+	box-sizing: border-box;
+}
+
+.element input[type='text']:focus, .element button:focus {
+	outline: none;
+	border-width: 0.75rem;
+}
+
+.element button {
+	transform: scale(0.9);
+	background-color: var(--bg);
+	outline: none;
+	border: solid var(--fg);
+	width: fit-content;
+	color: var(--fg);
+	cursor: inherit;
+}
+
+/************************* GRID *************************/
 
 .grid {
 	display: grid;
@@ -131,11 +144,15 @@ body {
 
 .el-img {
 	border:solid 0.5rem;
-	width: 20rem;
+	width: 17rem;
 	aspect-ratio: 1;
+	left:0px;
+	right:0px;
+	margin:auto;
 	border-radius: 3rem;
 	overflow: hidden;
 	position: relative;
+	background-color: var(--bg);
 }
 
 .el-img img {
@@ -160,7 +177,7 @@ body {
 	font-size: 2rem;
 }
 
-/************* BACKGROUND *************/
+/************************* BACKGROUND *************************/
 
 .bg {
 	position: absolute;
@@ -275,4 +292,52 @@ body {
 @keyframes ast-even {
 	from {transform: none;}
 	to {transform: translate(-200vw, 200vh) rotate(-180deg);}
+}
+
+/************************* CURSORS *************************/
+body {
+	cursor: url("../src/cursors/default.svg") 0 0, default;
+}
+
+.clickable, .clickable a {
+	cursor: url("../src/cursors/pointer.svg") 0 0, default;
+}
+
+.clickable:active, .clickable a:active {
+	cursor: url("../src/cursors/pointer-click.svg") 0 0, default;
+}
+
+.element input[type='text'] {
+	cursor: url("../src/cursors/text.svg") 0 0, default;
+}
+
+/************************* OTHERS *************************/
+.user {
+	font-size: 3rem;
+	padding: 1rem;
+	right: 0px;
+	position: absolute;
+	background-color: var(--bg2);
+	width: fit-content;
+	height: fit-content;
+	box-sizing: border-box;
+	border: 0.4rem solid;
+	border-radius: 1rem;
+	margin: 1rem;
+}
+
+.nosel {
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none; /* Standard syntax */
+}
+
+::selection {
+	color: var(--bg);
+	background: var(--fg);
+}
+
+::-moz-selection {
+	color: var(--bg);
+	background: var(--fg);
 }

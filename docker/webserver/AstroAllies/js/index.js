@@ -1,6 +1,15 @@
+// function toggle(id) {
+// 	let el = document.getElementById(id);
+// 	el.hidden = !el.hidden
+// }
 function toggle(id) {
-	let el = document.getElementById(id);
-	el.hidden = !el.hidden;
+	let cl = document.getElementById(id).classList;
+	if (cl.contains("hidden")) {
+		cl.remove("hidden");
+	}
+	else {
+		cl.add("hidden");
+	}
 }
 
 function stopProp(el) {
