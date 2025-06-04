@@ -1,5 +1,5 @@
 :root {
-	font-size: small;
+	font-size: 1.4vmin;
 	background-color: var(--bg);
 	font-family: 'Comfortaa';
 	--animation-time-factor: 1.5;
@@ -210,7 +210,7 @@
     border-bottom: calc(var(--ast-size)*0.29) solid var(--ast-color);
     border-left: calc(var(--ast-size)*0.29) solid var(--bg);
     border-right: calc(var(--ast-size)*0.29) solid var(--bg);
-        width: calc(var(--ast-size)*0.43);
+        width: calc(var(--ast-size)*0.44);
     height: 0;
 }
 
@@ -222,7 +222,7 @@
     border-top: calc(var(--ast-size)*0.29) solid var(--ast-color);
     border-left: calc(var(--ast-size)*0.29) solid var(--bg);
     border-right: calc(var(--ast-size)*0.29) solid var(--bg);
-    width: calc(var(--ast-size)*0.43);
+    width: calc(var(--ast-size)*0.44);
     height: 0;
 }
 
