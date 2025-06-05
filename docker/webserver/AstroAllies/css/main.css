@@ -1,15 +1,17 @@
 :root {
-	font-size: 1.4vmin;
-	background-color: var(--bg);
-	font-family: 'Comfortaa';
-	--bg: rgb(0, 0, 21);
-	--fg: rgb(255, 255, 255);
 	--ast-size: 6rem;
 	--ast-color: #e8e8e8;
 	--ast-time-factor: 1.5;
 	--ast-delay: -10s;
+	--fg: rgb(255, 255, 255);
+	--fg4: rgb(255, 230, 230);
+	--bg: rgb(0, 0, 21);
 	--bg2: #000000e4;
 	--bg3: #0000005a;
+	--bg4: rgb(80, 0, 21);
+	font-size: 1.4vmin;
+	background-color: var(--bg);
+	font-family: 'Comfortaa';
 	color: var(--fg);
 }
 
@@ -72,12 +74,11 @@
 
 .clickable {
 	transition: transform 0.2s;
-	transition-timing-function: ease-in;
 }
 .clickable:hover {
 	transform: scale(1.1);
 	transition: transform 0.3s;
-	transition-timing-function: ease;
+	transition-timing-function: ease-in-out;
 }
 
 .row {
@@ -150,6 +151,7 @@
 	padding-left: 0.75ch;
 	padding-right: 0.75ch;
 	text-align: center;
+	box-sizing: border-box;
 }
 
 .element input[type='text'], .element input[type='password'] {
@@ -158,13 +160,12 @@
 	border: solid var(--fg) 0.5rem;
 	font-weight: bold;
 	color: var(--fg);
-	box-sizing: border-box;
 	height: 2em;
 }
 
 .element input[type='text']:focus, .element input[type='password']:focus, .element .btn:focus {
 	outline: none;
-	border-width: 0.75rem;
+	border-width: 0.6rem;
 }
 
 .element .btn {
@@ -173,11 +174,54 @@
 	background-color: var(--bg);
 	outline: none;
 	border: solid var(--fg);
+	height: 7rem;
 	width: fit-content;
 	color: var(--fg);
 	cursor: inherit;
 }
 
+/************************* ALERT *************************/
+
+.alert {
+	position: fixed;
+	border:solid var(--fg) 0.5rem;
+	width: fit-content;
+	max-width: 50%;
+	left: 0px;
+	right: 0px;
+	margin: auto;
+	box-sizing: border-box;
+	height: fit-content;
+	top: 0px;
+	padding: 2rem;
+	border-radius: 5rem;
+	background-color: var(--bg);
+	transform: translateY(-100%);
+	transition: transform 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.al-show {
+	transform: translateY(0);
+}
+
+.alert div:first-child {
+	width: fit-content;
+	left: 0px;
+	right: 0px;
+	margin: auto;
+	font-size: 3rem;
+	font-weight: bolder;
+}
+
+.alert div:last-child {
+	font-size: 2rem;
+}
+
+.alert.err {
+	background-color: var(--bg4);
+	color: var(--fg4);
+	border-color: var(--fg4);
+}
 /************************* GRID *************************/
 
 .grid {
@@ -358,6 +402,10 @@ body {
 
 .element input[type='text'], .element input[type='password'] {
 	cursor: url("../src/cursors/text.svg") 0 0, default;
+}
+
+.alert, .alert * {
+	cursor: url(../src/cursors/alert.svg) 0 0, default
 }
 
 /************************* OTHERS *************************/
