@@ -30,6 +30,8 @@
 	border-radius: 5rem;
 	background-color: var(--bg2);
 	border: solid 0.5rem var(--fg);
+	max-width: 70%;
+	max-height: 90%;
 	/* border: solid red; */
 }
 
@@ -268,6 +270,24 @@
 
 .el-desc {
 	font-size: 2rem;
+}
+
+/************************* LIST *************************/
+
+.list {
+
+}
+
+.record {
+
+}
+
+.record:first-child {
+
+}
+
+.highlitght {
+
 }
 
 /************************* BACKGROUND *************************/
