@@ -400,11 +400,11 @@ body {
 }
 
 .clickable:active, .clickable a:active, .btn:active {
-	cursor: url("../src/cursors/pointer-click.svg") 0 0, default;
+	cursor: url("../src/cursors/pointer-click.svg") 16 0, default;
 }
 
 .element input[type='text'], .element input[type='password'] {
-	cursor: url("../src/cursors/text.svg") 0 0, default;
+	cursor: url("../src/cursors/text.svg") 16 0, default;
 }
 
 .alert, .alert * {
