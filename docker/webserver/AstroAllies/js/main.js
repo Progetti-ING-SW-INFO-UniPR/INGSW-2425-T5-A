@@ -38,7 +38,7 @@ function createAlert(name, desc) {
  */
 function newAlert(name, desc, time=5, ...classes) {
 	let al = createAlert(name, desc);
-	for (c of classes) {
+	for (let c of classes) {
 		al.classList.add(c);
 	}
 	document.body.appendChild(al);

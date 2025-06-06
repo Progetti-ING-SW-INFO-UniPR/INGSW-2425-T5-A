@@ -1,0 +1,85 @@
+/************************* LIST *************************/
+/*
+	
+	
+	
+*/
+.list {
+	border-radius: 5rem;
+	width: 100%;
+	height: fit-content;
+	max-height: 47rem;
+	overflow-y: scroll;
+	text-align: center;
+	align-items: center;
+	counter-reset: pos;
+}
+
+.div {
+	display: block;
+	content: " ";
+	width: 80%;
+	left: 0;
+	right: 0;
+	margin: auto;
+	margin-bottom: 0.5rem;
+	border-bottom:solid 0.25rem;
+}
+
+.record {
+	font-size: 4rem;
+	display: flex;
+	align-items: center;
+	border:solid 0.5rem;
+	border-radius: 2rem;
+	height: fit-content;
+	padding: 1rem;
+	margin: 1rem;
+	text-align: center;
+	align-items: center;
+}
+
+.record div {
+	text-align: center;
+	align-items: center;
+}
+
+.record#user div:nth-child(3n+1), .record:not(#user) div:nth-child(3n+1):before {
+	display: inline-block;
+	min-width: 4ch;
+	width: fit-content;
+	padding-left: 0.6ch;
+}
+
+.record:not(#user) div:nth-child(3n+1):before {
+	counter-increment: pos;
+	content: counter(pos) "°";
+}
+
+.record div:nth-child(3n+2) {
+	flex: auto;
+	text-align: left;
+}
+.record div:nth-child(3n+3) {
+	width: fit-content;
+	min-width: 8ch;
+	text-align: left;
+}
+
+.record div:nth-child(3n+1):after, .record div:nth-child(3n+3):before {
+	content: "";
+	height: 0.5em;
+	border-left: solid 0.3rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.record:first-child {
+	border-color: #f5e900;
+	background-color: #f5e9005d;
+}
+
+.record.highlight {
+	border-color: #00c400;
+	background-color: #00c4005d;
+}

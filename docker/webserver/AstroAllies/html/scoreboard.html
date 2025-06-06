@@ -4,10 +4,11 @@
 	<title>Astro Allies - Classifica</title>
 	<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
 	<link rel="stylesheet" href="../css/main.css">
-	<link rel="stylesheet" href="../css/login.css">
+	<link rel="stylesheet" href="../css/scoreboard.css">
 	<script src="../js/main.js"></script>
+	<script src="../js/scoreboard.js"></script>
 </head>
-<body>
+<body onload="test(randInt(10, 51));">
 	<div class="bg">
 		<div class="ast"></div>
 		<div class="ast"></div>
@@ -22,12 +23,13 @@
 		<div class="ast"></div>
 	</div>
 
-	<div class="menu">
+	<a class="home box top-left clickable" href="./index.html"></a>
+
+	<div class="menu nosel">
 		<div class="subtitle">Classifica Galattica</div>
-		<div class="list">
-			<div class="record"><div>1000</div><div>Username</div><div>0000000</div></div>
+		<div class="record highlight" id="user"><div>1°</div><div>Username</div><div>0000000</div></div>
+		<div class="div"></div>
+		<div class="list" id="scoreboard">
 		</div>
 	</div>
-
-	<a class="box top-left clickable" href="./index.html"><img src="../src/icons/home.svg" id="home"></img></a>
 </html>

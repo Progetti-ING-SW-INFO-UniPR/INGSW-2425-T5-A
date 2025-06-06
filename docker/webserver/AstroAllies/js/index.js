@@ -1,3 +1,3 @@
 function creaPartita(nGiocatori) {
-	// TODO
+	TOOD();
 }

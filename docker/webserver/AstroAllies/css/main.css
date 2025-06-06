@@ -30,8 +30,9 @@
 	border-radius: 5rem;
 	background-color: var(--bg2);
 	border: solid 0.5rem var(--fg);
-	max-width: 70%;
-	max-height: 90%;
+	max-width: 80%;
+	max-height: 80%;
+	overflow: hidden;
 	/* border: solid red; */
 }
 
@@ -272,24 +273,6 @@
 	font-size: 2rem;
 }
 
-/************************* LIST *************************/
-
-.list {
-
-}
-
-.record {
-
-}
-
-.record:first-child {
-
-}
-
-.highlitght {
-
-}
-
 /************************* BACKGROUND *************************/
 
 .bg {
@@ -409,11 +392,11 @@
 
 /************************* CURSORS *************************/
 body {
-	cursor: url("../src/cursors/default.svg") 0 0, default;
+	cursor: url("../src/cursors/default.svg") 5 0, default;
 }
 
-.clickable, .clickable a, .clickable * {
-	cursor: url("../src/cursors/pointer.svg") 0 0, default;
+.clickable, .clickable a, .clickable *, ::-webkit-scrollbar-thumb {
+	cursor: url("../src/cursors/pointer.svg") 16 0, default;
 }
 
 .clickable:active, .clickable a:active, .btn:active {
@@ -443,6 +426,16 @@ body {
 	overflow: hidden;
 }
 
+.home {
+	width: 9rem;
+	height: 9rem;
+	background-image: url("../src/icons/home.svg");
+	background-repeat: no-repeat;
+	background-size: 6rem;
+	background-position: center;
+	box-sizing: border-box;
+}
+
 .top-right {
 	top: 0px;
 	right: 0px;
@@ -451,6 +444,23 @@ body {
 .top-left {
 	top: 0px;
 	left: 0px;
+}
+
+::-webkit-scrollbar {
+	width: 1rem;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--fg);
+	border-radius: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	transform: scale(1.1);
 }
 
 .nosel {
