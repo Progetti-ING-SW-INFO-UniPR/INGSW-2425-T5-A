@@ -9,4 +9,7 @@ RUN apt-get update && apt-get install -y \
     iputils-ping traceroute curl openssh-server && \
     mkdir /var/run/sshd
 
+# Copia il file di configurazione del database
+COPY ./setup /docker-entrypoint-initdb.d
+
 EXPOSE 3306 22
