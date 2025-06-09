@@ -12,6 +12,7 @@ services:
       MYSQL_DATABASE: AstroAllies_DB
       MYSQL_USER: user
       MYSQL_PASSWORD: userpassword
+    command: --event-scheduler=ON
     volumes:
       - aa_db_data:/var/lib/mysql
     networks:
