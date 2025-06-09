@@ -1,3 +1,5 @@
+const urlParams = new URLSearchParams(window.location.search);
+
 function toggle(id) {
 	let cl = document.getElementById(id).classList;
 	if (cl.contains("hidden")) {
@@ -51,6 +53,14 @@ function newAlert(name, desc, time=5, ...classes) {
 			}, 1000);
 		}, time*1000);
 	},1)
+}
+
+function copy(id) {
+	let el = document.getElementById(id);
+	if (el.value == null)
+		navigator.clipboard.writeText(el.innerText);
+	else
+		navigator.clipboard.writeText(el.value);
 }
 
 function TOOD() {

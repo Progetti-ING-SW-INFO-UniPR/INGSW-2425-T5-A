@@ -78,10 +78,15 @@
 .clickable {
 	transition: transform 0.2s;
 }
+
 .clickable:hover {
 	transform: scale(1.1);
 	transition: transform 0.3s;
 	transition-timing-function: ease-in-out;
+}
+
+.clickable:has(> :disabled), .clickable:has(> .disabled), .clickable.disabled {
+	opacity: 0.5;
 }
 
 .row {
@@ -444,6 +449,16 @@ body {
 .top-left {
 	top: 0px;
 	left: 0px;
+}
+
+.copy {
+	content: "";
+	display: inline-block;
+	width: 0.6em;
+	height: 1em;
+	background-image: url("../src/icons/copy.svg");
+	background-repeat: no-repeat;
+	background-size: 0.6em;
 }
 
 ::-webkit-scrollbar {
