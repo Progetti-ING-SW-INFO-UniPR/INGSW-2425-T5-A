@@ -49,7 +49,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	<link rel="stylesheet" href="../css/main.css">
 	<link rel="stylesheet" href="../css/login.css">
 	<script src="../js/main.js"></script>
-	<script src="../js/signup.js"></script>
 </head>
 <body>
 	<div class="bg">
@@ -65,9 +64,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		<div class="ast"></div>
 		<div class="ast"></div>
 	</div>
-
+	
 	<a class="home box top-left clickable" href="./index.html"></a>
-
+	
 	<form class="menu" action="" method="POST">
 		<div class="subtitle">Registrati</div>
 		<div class="row">
@@ -87,10 +86,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			<div class="element"><input type="password" name="confirm" id="confirm" /></div>
 		</div>
 		<div class="row">
-			<div class="element clickable"><button class="btn" onclick="signup()">Registrati</button></div>
+			<div class="element clickable"><button class="btn" id="reg">Registrati</button></div>
 			<div class="element clickable"><a href="./login.html" class="btn">Accedi</a></div>
 		</div>
 		<input type="submit" id="regSubmit" hidden>
 	</form>
 </body>
+<footer>
+	<script src="../js/signup.js"></script>
+</footer>
 </html>
