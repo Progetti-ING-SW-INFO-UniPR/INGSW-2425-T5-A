@@ -1,0 +1,19 @@
+.game {
+	position: absolute;
+	width: fit-content;
+	height: fit-content;
+	border: solid 0.5rem;
+	border-radius: 2.5rem;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	margin: auto;
+	overflow: hidden;
+}
+
+#field {
+	height: 70rem;
+	width: calc(70rem * 16 / 9);
+	background-color: var(--bg);
+}
