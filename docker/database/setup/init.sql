@@ -4,8 +4,7 @@ USE AstroAllies_DB;
 CREATE TABLE IF NOT EXISTS Utente (
     Username VARCHAR(20) PRIMARY KEY,
     Email VARCHAR(100) NOT NULL UNIQUE,
-    Sale VARCHAR(8) NOT NULL,
-    Password CHAR(64) NOT NULL, -- SHA-256 in hex = 64 caratteri
+    Password VARCHAR(64) NOT NULL, -- SHA-256 bit in hex = 64 char
     Punteggio INT DEFAULT 0,
     CHECK (Email REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')
 );
@@ -13,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Utente (
 -- Creazione tabella Sessione
 CREATE TABLE IF NOT EXISTS Sessione (
     Username VARCHAR(20),
-    Token CHAR(128) NOT NULL UNIQUE,
+    Token VARCHAR(128) NOT NULL UNIQUE,
     Scadenza DATETIME NOT NULL,
     PRIMARY KEY (Username),
     FOREIGN KEY (Username) REFERENCES Utente(Username) ON DELETE CASCADE
