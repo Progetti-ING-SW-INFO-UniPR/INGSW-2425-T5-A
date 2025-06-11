@@ -25,6 +25,12 @@ services:
       - "8080:80"
       - "8443:443"
       - "2223:22"
+    environment:
+      MYSQL_HOST: aa_db
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: AstroAllies_DB
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
     volumes:
       - ./webserver/AstroAllies:/var/www/html
     depends_on:
