@@ -1,7 +1,7 @@
 function creaPartita(nGiocatori) {
-	TOOD();
+	TODO();
 }
 
 function join() {
-	TOOD();
+	TODO();
 }

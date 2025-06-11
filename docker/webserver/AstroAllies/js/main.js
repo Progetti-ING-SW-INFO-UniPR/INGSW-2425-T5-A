@@ -63,6 +63,6 @@ function copy(id) {
 		navigator.clipboard.writeText(el.value);
 }
 
-function TOOD() {
+function TODO() {
 	newAlert("Undefined Action", "The requested action is not yet available", 5, "err");
 }

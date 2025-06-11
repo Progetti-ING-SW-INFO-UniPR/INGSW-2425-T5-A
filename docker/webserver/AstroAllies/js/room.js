@@ -26,3 +26,11 @@ function initNames() {
 		grid.appendChild(divEl);
 	}
 }
+
+function cancel() {
+	TODO();
+}
+
+function start() {
+	TODO();
+}
