@@ -4,7 +4,7 @@ USE AstroAllies_DB;
 CREATE TABLE IF NOT EXISTS Utente (
     Username VARCHAR(20) PRIMARY KEY,
     Email VARCHAR(100) NOT NULL UNIQUE,
-    Sale VARCHAR(10) NOT NULL,
+    Sale VARCHAR(8) NOT NULL,
     Password CHAR(64) NOT NULL, -- SHA-256 in hex = 64 caratteri
     Punteggio INT DEFAULT 0,
     CHECK (Email REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')
