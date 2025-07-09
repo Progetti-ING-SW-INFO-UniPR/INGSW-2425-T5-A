@@ -1,14 +1,10 @@
 <?php
-//test connessione al db 
-$host = 'aa_db'; // nome container db nel network Docker
-$user = 'root';
-$pass = 'rootpassword';
-$db = 'AstroAllies_DB';
+require_once('includes/Box.php');
 
-$conn = new mysqli($host, $user, $pass, $db);
 
-if ($conn->connect_error) {
-    die("Connessione fallita: " . $conn->connect_error);
-}
-echo "✅ Connessione riuscita a MariaDB!";
+$b1 = new Box(0,0,3,5);
+$b2 = new Box(1,0,1,10);
+
+print($b2->check_overlap($b1));
+
 ?>
