@@ -33,7 +33,7 @@ require_once __DIR__ . "/./../includes/credentialChecks.php";
 
 	<a class="home box top-left clickable" href="/pages/index.php"></a>
 
-	<div class="menu">
+	<form class="menu" action="" method="POST">
 		<div class="subtitle">Accedi</div>
 		<div class="row">
 			<div class="element">Email:</div>
@@ -44,9 +44,10 @@ require_once __DIR__ . "/./../includes/credentialChecks.php";
 			<div class="element"><input type="password" name="password" id="password" /></div>
 		</div>
 		<div class="row">
-			<div class="element clickable"><button onclick="login()" class="btn">Accedi</button></div>
+			<div class="element clickable"><button class="btn" id="log">Accedi</button></div>
 			<div class="element clickable"><a href="/pages/signup.php" class="btn">Registrati</a></div>
 		</div>
+		<input type="submit" id="logSubmit" hidden>
 	</div>
 </body>
 </html>
@@ -61,14 +62,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	$result = $db->query($sqlMail, [$email]);
 	
 	if ($result && $result->num_rows > 0) {
-		echo "<script>newAlert('Email non registrata', 'Quest\'email non è associata ad alcun account', 5, 'err')</script>";
-	} else {
 		$row = $result->fetch_row();
-		if (password_verify($password . $db->pepe, $row["password"])) {
+		if (password_verify($password . $db->pepe, $row["Password"])) {
 			$_SESSION["USERNAME"] = $row["Username"];
+			echo "<script> window.location.href='/index.php' </script>";
 		} else {
 			echo "<script>newAlert('Password errata', 'La password inserita non è corretta per l\'account dell\'email sopra inserita', 5, 'err')</script>";
 		}
+	} else {
+		echo "<script>newAlert('Email non registrata', 'Quest\'email non è associata ad alcun account', 5, 'err')</script>";
 	}
 
 	$db->close();

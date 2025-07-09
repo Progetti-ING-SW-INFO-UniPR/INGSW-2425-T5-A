@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 				try {
 					$result = $db->query($sqlReg, [$username, $email, password_hash($password . $db->pepe, PASSWORD_DEFAULT)]);
 
-					echo "<script> window.location.href='/login.php' </script>";
+					echo "<script> window.location.href='/pages/login.php' </script>";
 				} catch(Exception $err) {
 					$e = $err->getMessage();
 					// echo "<script>newAlert('Errore in data base', '" . $e . "', 5, 'err')</script>";

@@ -1,3 +1,8 @@
 function login() {
-	TODO();
+	document.getElementById("logSubmit").click();
 }
+
+document.getElementById("log").addEventListener("click", (ev) => {
+	login();
+	ev.preventDefault();
+});

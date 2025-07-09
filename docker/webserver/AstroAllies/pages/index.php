@@ -1,3 +1,7 @@
+<?php
+session_start()
+?>
+
 <html lang="it">
 <head>
 	<meta charset="UTF-8">
@@ -22,7 +26,15 @@
 		<div class="ast"></div>
 		<div class="ast"></div>
 	</div>
-	<div class="box top-right">Nome Utente</div>
+	<div class="box top-right">
+		<?php
+		if(isset($_SESSION["USERNAME"])) {
+			echo $_SESSION["USERNAME"];
+		}
+		else {
+			echo "Guest";
+		}
+		?></div>
 	<div class="menu nosel">
 		<div class="title">Astro Allies</div>
 		<!--

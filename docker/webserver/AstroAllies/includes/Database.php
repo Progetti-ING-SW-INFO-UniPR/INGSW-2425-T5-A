@@ -6,7 +6,7 @@ class Database
     private $password;
     private $dbname;
     private $connection;
-	public readonly int $pepe;
+	public readonly string $pepe;
 
     public function __construct()
     {
