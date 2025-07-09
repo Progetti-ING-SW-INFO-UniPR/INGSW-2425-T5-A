@@ -1,3 +1,11 @@
+<?php
+
+use LDAP\Result;
+
+session_start();
+require_once __DIR__ . "/./../includes/Database.php";
+require_once __DIR__ . "/./../includes/credentialChecks.php";
+?>
 <html lang="it">
 <head>
 	<meta charset="UTF-8">
@@ -23,7 +31,7 @@
 		<div class="ast"></div>
 	</div>
 
-	<a class="home box top-left clickable" href="./index.html"></a>
+	<a class="home box top-left clickable" href="/pages/index.php"></a>
 
 	<div class="menu">
 		<div class="subtitle">Accedi</div>
@@ -37,8 +45,32 @@
 		</div>
 		<div class="row">
 			<div class="element clickable"><button onclick="login()" class="btn">Accedi</button></div>
-			<div class="element clickable"><a href="./signup.php" class="btn">Registrati</a></div>
+			<div class="element clickable"><a href="/pages/signup.php" class="btn">Registrati</a></div>
 		</div>
 	</div>
 </body>
 </html>
+<?php
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+	$email = $_POST["email"];
+	$password = $_POST["password"];
+	$sqlMail = "SELECT * FROM Utente WHERE Email = ?;";
+
+	$db = new Database();
+
+	$result = $db->query($sqlMail, [$email]);
+	
+	if ($result && $result->num_rows > 0) {
+		echo "<script>newAlert('Email non registrata', 'Quest\'email non è associata ad alcun account', 5, 'err')</script>";
+	} else {
+		$row = $result->fetch_row();
+		if (password_verify($password . $db->pepe, $row["password"])) {
+			$_SESSION["USERNAME"] = $row["Username"];
+		} else {
+			echo "<script>newAlert('Password errata', 'La password inserita non è corretta per l\'account dell\'email sopra inserita', 5, 'err')</script>";
+		}
+	}
+
+	$db->close();
+}
+?>

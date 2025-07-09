@@ -27,7 +27,7 @@ require_once __DIR__ . "/./../includes/credentialChecks.php";
 		<div class="ast"></div>
 	</div>
 	
-	<a class="home box top-left clickable" href="./index.html"></a>
+	<a class="home box top-left clickable" href="/pages/index.php"></a>
 	
 	<form class="menu" action="" method="POST">
 		<div class="subtitle">Registrati</div>
@@ -49,7 +49,7 @@ require_once __DIR__ . "/./../includes/credentialChecks.php";
 		</div>
 		<div class="row">
 			<div class="element clickable"><button class="btn" id="reg">Registrati</button></div>
-			<div class="element clickable"><a href="./login.html" class="btn">Accedi</a></div>
+			<div class="element clickable"><a href="/pages/login.php" class="btn">Accedi</a></div>
 		</div>
 		<input type="submit" id="regSubmit" hidden>
 	</form>
@@ -65,8 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	$password = $_POST["password"];
 	$sqlMail = "SELECT * FROM Utente WHERE Email = ?;";
 	$sqlUser = "SELECT * FROM Utente WHERE Username = ?;";
-	// $pepe = getenv('PSWD_PEPE');
-	$pepe = "2ry89^";
 	$sqlReg = "INSERT INTO Utente (Username, Email, Password) VALUES (?, ?, ?)";
 	
 	$db = new Database();
@@ -82,7 +80,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		} else {
 			if(isValidEmail($email) and isValidPassword($password) and isValidUsername($username)) {
 				try {
-					$result = $db->query($sqlReg, [$username, $email, password_hash($password . $pepe, PASSWORD_DEFAULT)]);
+					$result = $db->query($sqlReg, [$username, $email, password_hash($password . $db->pepe, PASSWORD_DEFAULT)]);
+
+					echo "<script> window.location.href='/login.php' </script>";
 				} catch(Exception $err) {
 					$e = $err->getMessage();
 					// echo "<script>newAlert('Errore in data base', '" . $e . "', 5, 'err')</script>";

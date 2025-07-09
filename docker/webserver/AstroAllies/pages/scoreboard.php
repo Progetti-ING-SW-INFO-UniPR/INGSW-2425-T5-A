@@ -23,7 +23,7 @@
 		<div class="ast"></div>
 	</div>
 
-	<a class="home box top-left clickable" href="./index.html"></a>
+	<a class="home box top-left clickable" href="/pages/index.php"></a>
 
 	<div class="menu nosel">
 		<div class="subtitle">Classifica Galattica</div>

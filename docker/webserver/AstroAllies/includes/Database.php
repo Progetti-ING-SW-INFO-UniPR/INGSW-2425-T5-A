@@ -6,6 +6,7 @@ class Database
     private $password;
     private $dbname;
     private $connection;
+	public readonly int $pepe;
 
     public function __construct()
     {
@@ -13,6 +14,8 @@ class Database
         $this->username = getenv('MYSQL_USER');
         $this->password = getenv('MYSQL_PASSWORD');
         $this->dbname = getenv('MYSQL_DATABASE');
+		// $this->pepe = getenv('PSWD_PEPE');
+		$this->pepe = "2ry89^";
 
 
         $this->connect();
@@ -41,7 +44,9 @@ class Database
         $result = $stmt->get_result();
         $stmt->close();
 
-        return $result;
+		if($result)
+        	return new DBResult($result);
+		return $result;
     }
 
     public function close()
@@ -49,3 +54,32 @@ class Database
         $this->connection->close();
     }
 }
+
+class DBResult{
+	private $fields;
+	private $mysqli;
+	public readonly int $num_rows;
+	
+	public function __construct(mysqli_result $mysqli_res) {
+		$this->mysqli = $mysqli_res;
+		$this->num_rows = $this->mysqli->num_rows;
+		$this->fields = $this->mysqli->fetch_fields();
+		for ($i = 0; $i < count($this->fields); $i++) {
+			$this->fields[$i] = $this->fields[$i]->name;
+		}
+	}
+
+	/**
+     * @return array|null|false
+     */
+	public function fetch_row() : array {
+		$row = $this->mysqli->fetch_row();
+		if($row == null or $row == false) return $row;
+		return array_combine($this->fields, $row);
+	}
+
+	public function get_mysqli_result() {
+		return $this->mysqli;
+	}
+}
+?>

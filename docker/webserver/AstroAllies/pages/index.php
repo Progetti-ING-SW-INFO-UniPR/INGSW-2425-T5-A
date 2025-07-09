@@ -28,10 +28,10 @@
 		<!--
 		<div class="element"><a href="">Esci</a></div>
 		-->
-		<div class="element clickable"><a href="./login.html">Accedi/Registrati</a></div>
+		<div class="element clickable"><a href="/pages/login.php">Accedi/Registrati</a></div>
 		<div class="element clickable" onclick="toggle('create')">Crea una Partita</div>
 		<div class="element clickable" onclick="toggle('join')">Unisciti ad una Partita</div>
-		<div class="element clickable"><a href="./scoreboard.html">Classifica Globale</a></div>
+		<div class="element clickable"><a href="/pages/scoreboard.php">Classifica Globale</a></div>
 	</div>
 	<div class="shadow hidden" id="create" onclick="toggle('create');">
 		<div class="menu nosel" onmouseenter="stopProp(this)">
