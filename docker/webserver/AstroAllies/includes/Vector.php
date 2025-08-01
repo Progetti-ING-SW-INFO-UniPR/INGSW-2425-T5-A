@@ -8,6 +8,9 @@ class Vector
         $this->alfa = deg2rad($alfa); //input in gradi convertito in radianti 
         $this->norm = $norm;
     }
+    function deep_copy():Vector{
+	    return unserialize(serialize($this));
+    }
     public function get_alfa(): float{
         return $this->alfa; 
     }

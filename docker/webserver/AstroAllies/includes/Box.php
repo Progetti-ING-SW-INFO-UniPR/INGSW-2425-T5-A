@@ -2,7 +2,7 @@
 class Box
 {
     protected float $x;
-    protected float $y; // (x,y) sono lo spigolo in alto a sinistra della box
+    protected float $y; // (x,y) spigolo in alto a sinistra della box
     protected float $width;
     protected float $height;
 
@@ -11,6 +11,9 @@ class Box
         $this->y = $y;
         $this->width = abs($width);
         $this->height = abs($height);
+    }
+    public function deep_copy():Box{
+	    return unserialize(serialize($this));
     }
     public function get_x(): float{
         return $this->x;
