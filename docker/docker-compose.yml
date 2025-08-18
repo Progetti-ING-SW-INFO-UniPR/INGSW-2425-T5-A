@@ -38,6 +38,18 @@ services:
       - aa_db
     networks:
       - aa_network
+    
+  aa_socket:
+    build: ./socketserver
+    container_name: aa_socket
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./socketserver/app:/app
+    depends_on:
+      - aa_app
 
 volumes:
   aa_db_data:

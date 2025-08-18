@@ -3,11 +3,11 @@ FROM php:8.1-apache
 # Abilita i moduli e installa strumenti
 RUN a2enmod ssl rewrite
 RUN apt-get update && apt-get install -y \
-    iputils-ping traceroute curl openssh-server default-mysql-client iproute2 && \
+    iputils-ping traceroute curl openssh-server default-mysql-client && \
     docker-php-ext-install mysqli && \
 	docker-php-ext-install sockets && \
     docker-php-ext-enable mysqli && \
-    mkdir /var/run/sshd
+    mkdir /var/run/sshd -p
 
 # Genera certificati SSL self-signed
 RUN openssl req -x509 -nodes -days 365 \
