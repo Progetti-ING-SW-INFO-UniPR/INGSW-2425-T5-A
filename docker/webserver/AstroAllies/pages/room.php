@@ -1,4 +1,8 @@
 <html lang="it">
+<?php
+session_start();
+require_once __DIR__ . "/./../includes/SocketServer.php";
+?>
 <head>
 	<meta charset="UTF-8">
 	<title>Astro Allies - Stanza</title>
@@ -39,5 +43,11 @@
 			<div class="element clickable"><button class="btn" onclick="start();" disabled>Inizia</button></div>
 		</div>
 	</div>
+
+	<footer>
+		<script>
+			// let websocket = new WebSocket("https://127.0.0.1:2302");
+		</script>
+	</footer>
 </body>
 </html>
