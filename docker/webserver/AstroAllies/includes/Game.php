@@ -1,11 +1,11 @@
 <?php
-require_once("includes/Vector");
-require_once("includes/Box");
-require_once("includes/Entity");
-require_once("includes/Item");
-require_once("includes/Asteroid");
-require_once("includes/Bullet");
-require_once("includes/Spaceship");
+require_once("Vector.php");
+require_once("Box.php");
+require_once("Entity.php");
+require_once("Item.php");
+require_once("Asteroid.php");
+require_once("Bullet.php");
+require_once("Spaceship.php");
 
 //VECTOR 
 const DEFAULT_VECTOR = new Vector(0,0);
@@ -264,6 +264,8 @@ class Game {
      * Crea e @see add_asteroid() aggiunge all'array relativo l'asteroide creato.
      */
     public function spawn_asteroid(){
+        $min=0;
+        $max=0;
         if($this->score == 0){ //init
             $min = 1;
             $min = 2;

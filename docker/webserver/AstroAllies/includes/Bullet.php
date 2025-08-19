@@ -1,5 +1,5 @@
 <?php 
-require_once("includes/Entity");
+require_once("Entity.php");
 
 class Bullet extends Entity{
     protected int $rank;

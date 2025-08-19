@@ -1,6 +1,6 @@
 <?php 
-require_once("includes/Entity");
-require_once("includes/Bullet");
+require_once("Entity.php");
+require_once("Bullet.php");
 
 class Spaceship extends Entity{
     protected int $energy; 
@@ -137,7 +137,7 @@ class Spaceship extends Entity{
                     break;
                 case 3: // bullet rank upgrade
                     if($this->ammo_type->get_rank() < 3)
-                        $this->ammo_type->set_rank(++$this->ammo_type->get_rank());
+                        $this->ammo_type->set_rank($this->ammo_type->get_rank()+1);
                     break;
                 case 4: // bullet size upgrade
                     if($this->ammo_type->get_hitbox()->get_width()+5 < $this->hitbox->get_width())

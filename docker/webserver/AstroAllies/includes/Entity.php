@@ -1,13 +1,13 @@
 <?php
-require_once("includes/Vector.php");
-require_once("includes/Box.php");
-require_once("includes/Game.php");
+require_once("Vector.php");
+require_once("Box.php");
+require_once("Game.php");
 
 abstract class Entity
 {
     protected Vector $velocity; // vettore velocità angolo=direzione norma=velocità
     protected Box $hitbox;
-    protected Game $game; //default null così da creare il game poi set_game()
+    protected ?Game $game; //default null così da creare game 
 
     public function __construct(Vector $velocity, Box $hitbox, Game $game = null){
         $this->velocity = $velocity;
@@ -47,7 +47,11 @@ abstract class Entity
         $this->hitbox->move($this->velocity->get_dx(), $this->velocity->get_dy());
     }
     public function __toString(): string {
-        return "Dir:" . $this->velocity . " Hitbox:" . $this->hitbox . "Game:" . $this->game;  
+        $s = "";
+        if(!is_null($this->game))
+            $s = "Game:".$this->game->get_id();
+
+        return "Dir:" . $this->velocity . " Hitbox:" . $this->hitbox . $s;  
     }
     /*
     public function move(float $new_dir): void{

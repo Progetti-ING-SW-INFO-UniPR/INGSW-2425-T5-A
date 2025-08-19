@@ -1,5 +1,5 @@
 <?php 
-require_once("includes/Entity");
+require_once("Entity.php");
 
 class Item extends Entity{
     protected int $type;
