@@ -25,7 +25,7 @@ RUN a2ensite default-ssl && a2ensite 000-default
 COPY ./AstroAllies /var/www/html/
 
 # Espone porte HTTP, HTTPS e SSH
-EXPOSE 80 443 22 9001
+EXPOSE 80 443 22
 
 CMD ["apache2-foreground"]
 
