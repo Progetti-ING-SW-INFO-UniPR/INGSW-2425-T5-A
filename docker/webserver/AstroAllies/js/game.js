@@ -1,7 +1,7 @@
-let g = document.getElementById("field");
+let g = document.getElementById("field").getContext("2d");
 
 function drawShip(x, y, w, h, a) {
-
+    
 }
 
 function drawAsteroid(x, y, w, h, r) {
