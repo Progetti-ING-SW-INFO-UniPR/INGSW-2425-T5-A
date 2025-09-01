@@ -6,7 +6,6 @@ use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
 require_once './includes/Room.php';
-require_once './includes/Client.php';
 
 function formatData($code, $data) {
 	return '{"code":"'.$code.'", "data": '.$data.'}';
@@ -30,6 +29,7 @@ class MyServer implements MessageComponentInterface {
 	}
 
 	public function onMessage(ConnectionInterface $from, $msg) {
+		echo $msg."\n";
 		$msg = json_decode($msg);
 		switch ($msg->code) {
 			case "connect":
@@ -40,18 +40,22 @@ class MyServer implements MessageComponentInterface {
 				$id = uniqid();
 				$this->rooms[$id] = new Room($id);
 				$from->send(formatStr("room", $id));
-				$this->rooms[$id]->addClient($from, $this->clients[$from]);
 				break;
 			case "join":
+				echo "Join start\n";
 				$id = $msg->data;
 				$room = $this->rooms[$id];
 				if(!$room->isStarted()) {
-					foreach ($room->getClients() as $user) {
-						$from->send(formatStr("user", $user));
+					echo "For start\n";
+					$roomClients = $room->getClients();
+					foreach ($roomClients as $socket) {
+						$from->send(formatStr("user", $this->clients[$socket]));
 					}
+					echo "Adding: ".$this->clients[$from]."\n";
 					$room->addClient($from, $this->clients[$from]);
 					$room->send(formatStr("user", $this->clients[$from]));
 				}
+				echo "Join end\n";
 				break;
 			case "start":
 				break;
@@ -74,7 +78,6 @@ class MyServer implements MessageComponentInterface {
 	}
 
 	public function onClose(ConnectionInterface $conn) {
-		echo "Disconnesso";
 	}
 
 	public function onError(ConnectionInterface $conn, \Exception $e) {

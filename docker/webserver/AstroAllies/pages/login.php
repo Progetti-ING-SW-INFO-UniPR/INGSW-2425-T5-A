@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		$row = $result->fetch_row();
 		if (password_verify($password . $db->pepe, $row["Password"])) {
 			$_SESSION["USERNAME"] = $row["Username"];
-			echo "<script> window.location.href='/index.php' </script>";
+			header("Location: ./index.php");
 		} else {
 			echo "<script>newAlert('Password errata', 'La password inserita non è corretta per l\'account dell\'email sopra inserita', 5, 'err')</script>";
 		}

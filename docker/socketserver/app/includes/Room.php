@@ -41,9 +41,9 @@ class Room {
 		return $this->started;
 	}
 
-	public function write($message) {
-		foreach ($this->clients as $client) {
-			$client->getConnection()->write($message);
+	public function send($message) {
+		foreach ($this->clients as $socket) {
+			$socket->send($message);
 		}
 	}
 }

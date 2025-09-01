@@ -1,3 +1,29 @@
+let connected = 0;
+let maxPlayers = parseInt(urlParams.get("players"));
+let id = urlParams.get("id");
+
+if (id == "") id = null;
+// if (maxPlayers == null) maxPlayers = 4;
+
+function getPlayer(n, name) {
+	let divEl = document.createElement("div");
+	let divTitle = document.createElement("div");
+	let divName = document.createElement("div");
+
+	divEl.classList.add("grid-el");
+	divTitle.classList.add("el-title");
+	divName.classList.add("el-name");
+
+	divTitle.id = "player"+n;
+
+	divTitle.appendChild(document.createTextNode(name));
+	divName.appendChild(document.createTextNode(n+"° Cannoniere"));
+
+	divEl.appendChild(divTitle);
+	divEl.appendChild(divName);
+	return divEl;
+}
+
 function initNames() {
 	/* 
 	 * 	<div class="grid-el">
@@ -5,26 +31,27 @@ function initNames() {
 	 * 		<div class="el-name">1° Cannoniere</div>
 	 * 	</div>
 	 */
-	let n = parseInt(urlParams.get("players"));
 	let grid = document.getElementById("players");
 
-	for (let i = 1; i < n; i++) {
-		let divEl = document.createElement("div");
-		let divTitle = document.createElement("div");
-		let divName = document.createElement("div");
-
-		divEl.classList.add("grid-el");
-		divTitle.classList.add("el-title");
-		divName.classList.add("el-name");
-
-		divTitle.appendChild(document.createTextNode("Reclutamento..."));
-		divName.appendChild(document.createTextNode(i+"° Cannoniere"));
-
-		divEl.appendChild(divTitle);
-		divEl.appendChild(divName);
+	for (let i = 1; i < maxPlayers; i++) {
+		let divEl = getPlayer(i, "Reclutamento...");
 
 		grid.appendChild(divEl);
 	}
+
+	document.getElementById("code").innerHTML = id;
+}
+
+function connect(username) {
+	let div = document.getElementById("player"+connected);
+	if (div == null) {
+		let grid = document.getElementById("players");
+		grid.appendChild(getPlayer(connected, username));
+	} else {
+		div.innerHTML = "";
+		div.appendChild(document.createTextNode(username));
+	}
+	connected++;
 }
 
 function cancel() {

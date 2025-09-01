@@ -1,6 +1,9 @@
 <?php
 session_start();
-if (isset($_SESSION[""]))
+if (!isset($_SESSION["USERNAME"])) {
+	header("Location: ./index.php");
+	die();
+}
 ?>
 <html lang="it">
 <head>
@@ -28,13 +31,15 @@ if (isset($_SESSION[""]))
 	</div>
 
 	<a class="home box top-left clickable" href="/pages/index.php"></a>
-
+	<?php 
+	echo '<input id="username" type="text" value="'.$_SESSION["USERNAME"].'" hidden>';
+	?>
 	<div class="menu nosel">
 		<div class="subtitle">Stanza " <div id="code">Test</div> " <div class="copy clickable" onclick="copy('code');"></div></div>
 		<div class="element">Equipaggio:</div>
 		<div class="grid" id="players">
 			<div class="grid-el">
-				<div class="el-title">Nome Utente</div>
+				<div class="el-title" id="player0">Nome Utente</div>
 				<div class="el-name">Capitano</div>
 			</div>
 		</div>
@@ -45,20 +50,38 @@ if (isset($_SESSION[""]))
 	</div>
 
 	<footer>
-		<script>
-			// console.log(location.hostname);
+		<script>			
+			let idDiv = document.getElementById("code");
+
 			let websocket = new WebSocket("ws://localhost:8000/");
 
 			websocket.onmessage = (ev) => {
 				let msg = JSON.parse(ev.data);
-				console.log("Message Received!");
 				console.log(msg);
+				switch (msg.code) {
+					case "room":
+						idDiv.innerHTML = msg.data;
+						id = msg.data;
+						websocket.send(`{"code": "join", "data":"${id}"}`);
+						break;
+					case "user":
+						connect(msg.data);
+						break;
+				}
 			};
 
 			websocket.onopen = () => {
-				let msg = {code: "username", data: "Hello there!"};
+				// let msg = {code: "test", data: "Hello there!"};
+				// websocket.send(JSON.stringify(msg));
+				let msg = {code: "connect", data: document.getElementById("username").value};
 				websocket.send(JSON.stringify(msg));
-				console.log("Message Sent!");
+				if (id == null) {
+					msg.code = "create";
+					msg.data = "";
+					websocket.send(JSON.stringify(msg));
+				} else {
+					websocket.send(`{"code": "join", "data":"${id}"}`);
+				}
 			}
 			
 		</script>
