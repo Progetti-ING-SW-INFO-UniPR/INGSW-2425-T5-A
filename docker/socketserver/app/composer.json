@@ -1,5 +1,5 @@
 {
     "require": {
-        "react/socket": "1.16.0"
+        "cboden/ratchet": "^0.4"
     }
 }

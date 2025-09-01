@@ -14,7 +14,7 @@ abstract class Entity
         $this->hitbox = $hitbox;
         $this->game = $game;
     }
-    function deep_copy():Entity{
+    public function deep_copy():Entity{
 	    return unserialize(serialize($this));
     }
     public function get_velocity():Vector{

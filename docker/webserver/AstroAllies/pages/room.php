@@ -1,7 +1,8 @@
-<html lang="it">
 <?php
 session_start();
+if (isset($_SESSION[""]))
 ?>
+<html lang="it">
 <head>
 	<meta charset="UTF-8">
 	<title>Astro Allies - Stanza</title>
@@ -45,7 +46,21 @@ session_start();
 
 	<footer>
 		<script>
-			// let websocket = new WebSocket("https://127.0.0.1:2302");
+			// console.log(location.hostname);
+			let websocket = new WebSocket("ws://localhost:8000/");
+
+			websocket.onmessage = (ev) => {
+				let msg = JSON.parse(ev.data);
+				console.log("Message Received!");
+				console.log(msg);
+			};
+
+			websocket.onopen = () => {
+				let msg = {code: "username", data: "Hello there!"};
+				websocket.send(JSON.stringify(msg));
+				console.log("Message Sent!");
+			}
+			
 		</script>
 	</footer>
 </body>
