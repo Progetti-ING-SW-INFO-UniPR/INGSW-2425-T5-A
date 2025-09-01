@@ -1,0 +1,7 @@
+Asteroid 82px
+Powerup 32px
+Points 32px 
+Laser 46px
+Torpedo 75px
+Incrociatore 75px
+Corazzata 75px

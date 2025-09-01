@@ -54,10 +54,17 @@ function rng_drop() : int{
     return $i;
 }
 
+enum Status{
+    case Running;
+    case Won;
+    case Lost;
+    case Pause;
+}
+
 class Game {
     protected string $id;
     protected int $score;
-    protected bool $on_pause;
+    protected Status $status; 
     protected Box $playing_field;
     protected Box $spawning_field;
     protected Box $exfil_area; 
@@ -70,7 +77,7 @@ class Game {
     public function __construct(String $id, Box $pf=PLAYING_FIELD, Box $sf=SPAWNING_FIELD, Box $ea=EXFIL_AREA){
         $this->id = $id;
         $this->score = 0;
-        $this->on_pause = false;
+        $this->status = Status::Running;
         $this->playing_field = $pf;
         $this->spawning_field = $sf;
         $this->exfil_area = $ea;
@@ -94,11 +101,11 @@ class Game {
     public function add_score(int $s){
         $this->score += $s;
     }
-    public function get_on_pause():bool{
-        return $this->on_pause;
+    public function get_status():Status{
+        return $this->status;
     }
-    public function set_on_pause(bool $p){
-        $this->on_pause = $p;
+    public function set_status(Status $p){
+        $this->status = $p;
     }
     public function get_playing_field() : Box {
         return $this->playing_field;
@@ -221,6 +228,10 @@ class Game {
  * Impedisce di generare troppi asteroidi contemporaneamente. 
  */
     public function update(){
+        if($this->ship->get_hitbox()->check_overlap(EXFIL_AREA)){ //navicella esfiltra
+            $this->game_win();
+            return;
+        }
         $this->ship->update();
         foreach($this->bullets as $b){
             $b->update();
@@ -341,10 +352,15 @@ class Game {
     }
 
     public function game_over(){
-    
+        $this->status = Status::Lost;
+        $this->score /= 3;
     }
     public function game_win(){
-        
+        $this->status = Status::Won;                    
+    }
+    public function toggle_pause(){
+        if($this->status != Status::Lost ||$this->status != Status::Won)
+            $this->status = $this->status == Status::Running ? Status::Pause : Status::Running;
     }
 
 }
