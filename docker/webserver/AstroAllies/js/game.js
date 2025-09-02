@@ -2,6 +2,35 @@
 let field = document.getElementById("field"); // canvas
 let g = field.getContext("2d"); //context
 
+/** 
+ * funzione update()
+ * 
+ */
+let data = {
+    asteroids: [
+        {x: 0, y: 0, w: 0, h: 0},
+        {x: 0, y: 0, w: 0, h: 0}
+    ],
+    items: [
+        {x: 0, y: 0, w: 0, h: 0, type: 0},
+        {x: 0, y: 0, w: 0, h: 0, type: 0} //type == 1 -> points.png type > 1 powerup.png
+    ],
+    bulltes: [
+        {x: 0, y: 0, w: 0, h: 0},
+        {x: 0, y: 0, w: 0, h: 0}
+    ],
+    ship: {x: 0, y: 0, w: 0, h: 0, a: 0},
+    energy: 0,
+    maxenergy: 0,
+    points: 0,
+    comms: {
+        "username": 0,
+        "username": 0,
+        "username": 0,
+        "username": 0,
+    }
+}
+
 let imageCache = {};
 /**
  * Caricamento in cache assets @var imageCache
@@ -87,13 +116,13 @@ function drawScore(score) {
  * Disegna l'energia corrente
  * @param {int} energy energia navicella
  */
-function drawEnergy(energy) {
+function drawEnergy(energy, maxenergy) {
     g.save();
     g.font = "20px Arial";
     g.filStyle = "white";
     g.textAlign = "left";
     g.textBaseline = "bottom";
-    g.fillText("Energy: " + energy, field.height - 10); //10 px di margine
+    g.fillText("Energy: " + energy + "/" + maxenergy, field.height - 10); //10 px di margine
     g.restore();
 }
 
@@ -142,7 +171,7 @@ function drawComms(type) {
 
 /*********** CONTROLLER ***********/
 
-//attaccarre add event listener window 
+//attaccare add event listener window 
 function captainKeyDown(KeyboardEvent){
     const commands = ["KeyW", "KeyA","KeyS","KeyD",
                       "ArrowUP","ArrowLeft","ArrowDown","ArrowRight","Space",
