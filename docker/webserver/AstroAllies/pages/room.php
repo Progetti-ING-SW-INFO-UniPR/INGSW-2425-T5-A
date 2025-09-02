@@ -50,25 +50,20 @@ if (!isset($_SESSION["USERNAME"])) {
 	</div>
 
 	<footer>
-		<script>			
+		<script>
 			let idDiv = document.getElementById("code");
 
-			let websocket = new WebSocket("ws://localhost:8000/");
+			let websocket = new WebSocket("ws://"+window.location.hostname+":8000/");
 
-			websocket.onmessage = (ev) => {
-				let msg = JSON.parse(ev.data);
-				console.log(msg);
-				switch (msg.code) {
-					case "room":
-						idDiv.innerHTML = msg.data;
-						id = msg.data;
-						websocket.send(`{"code": "join", "data":"${id}"}`);
-						break;
-					case "user":
-						connect(msg.data);
-						break;
-				}
-			};
+			/**
+			 * Invia un messaggio tramite socket al server.
+			 * @param {string} code tipo di messaggio
+			 * @param {object} data contenuto del messaggio
+			 */
+			function send2server(code, data) {
+				let msg = {code: code, data: data};
+				websocket.send(JSON.stringify(msg));
+			}
 
 			websocket.onopen = () => {
 				// let msg = {code: "test", data: "Hello there!"};
@@ -84,7 +79,26 @@ if (!isset($_SESSION["USERNAME"])) {
 				}
 			}
 			
+
+			websocket.onmessage = (ev) => {
+				let msg = JSON.parse(ev.data);
+				console.log(msg);
+				switch (msg.code) {
+					case "room":
+						idDiv.innerHTML = msg.data;
+						id = msg.data;
+						websocket.send(`{"code": "join", "data":"${id}"}`);
+						break;
+					case "connected":
+						connect(msg.data);
+						break;
+					case "disconnected":
+						disconnect(msg.data);
+						break;
+				}
+			};
 		</script>
+		<script src="../js/game.js"></script>
 	</footer>
 </body>
 </html>

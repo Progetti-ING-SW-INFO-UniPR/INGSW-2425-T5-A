@@ -3,5 +3,6 @@ function creaPartita(nGiocatori) {
 }
 
 function join() {
-	TODO();
+	let id = document.getElementById("roomid");
+	window.location.href = "/pages/room.php?id="+id;
 }

@@ -15,6 +15,25 @@ function formatStr($code, $str) {
 	return '{"code":"'.$code.'", "data": "'.$str.'"}';
 }
 
+function isValidUsername($username) : bool {
+	return preg_match("/^[A-Za-z0-9]+$/", $username) == 1;
+	// return true;
+}
+
+function attach($socket, $username, $list) {
+	$oldSocket = null;
+	if(!isset($list[$socket])){
+		foreach ($list as $client) {
+			if ($list[$client] == $username){
+				$list->detach($client);
+				$oldSocket = $client;		
+				break;
+			}
+		}
+	}
+	return $oldSocket;
+}
+
 class MyServer implements MessageComponentInterface {
 	protected array $rooms;
 	protected SplObjectStorage $clients;
@@ -29,12 +48,13 @@ class MyServer implements MessageComponentInterface {
 	}
 
 	public function onMessage(ConnectionInterface $from, $msg) {
-		echo $msg."\n";
 		$msg = json_decode($msg);
 		switch ($msg->code) {
 			case "connect":
-				$this->clients->attach($from);
-				$this->clients[$from] = $msg->data;
+				if(isValidUsername($msg->data)) {			
+					$this->clients->attach($from);
+					$this->clients[$from] = $msg->data;
+				}
 				break;
 			case "create":
 				$id = uniqid();
@@ -42,20 +62,15 @@ class MyServer implements MessageComponentInterface {
 				$from->send(formatStr("room", $id));
 				break;
 			case "join":
-				echo "Join start\n";
 				$id = $msg->data;
-				$room = $this->rooms[$id];
-				if(!$room->isStarted()) {
-					echo "For start\n";
-					$roomClients = $room->getClients();
-					foreach ($roomClients as $socket) {
-						$from->send(formatStr("user", $this->clients[$socket]));
+				try {
+					$room = $this->rooms[$id];
+					if(!$room->isStarted()) {
+						$room->connect($from, $this->clients[$from]);
 					}
-					echo "Adding: ".$this->clients[$from]."\n";
-					$room->addClient($from, $this->clients[$from]);
-					$room->send(formatStr("user", $this->clients[$from]));
+				} catch (Exception $err) {
+					echo $err;
 				}
-				echo "Join end\n";
 				break;
 			case "start":
 				break;
@@ -78,6 +93,12 @@ class MyServer implements MessageComponentInterface {
 	}
 
 	public function onClose(ConnectionInterface $conn) {
+		$this->clients->detach($conn);
+		foreach ($this->rooms as $room) {
+			if($room->getClients()->contains($conn)) {
+				$room->disconnect($conn);
+			}
+		}
 	}
 
 	public function onError(ConnectionInterface $conn, \Exception $e) {

@@ -54,6 +54,18 @@ function connect(username) {
 	connected++;
 }
 
+function disconnect(username) {
+	let div = document.getElementById("player"+connected);
+	if (div == null) {
+		let grid = document.getElementById("players");
+		grid.appendChild(getPlayer(connected, username));
+	} else {
+		div.innerHTML = "";
+		div.appendChild(document.createTextNode(username));
+	}
+	connected++;
+}
+
 function cancel() {
 	TODO();
 }

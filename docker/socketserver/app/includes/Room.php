@@ -20,6 +20,24 @@ class Room {
 		$this->clients[$socket] = $username;
 	}
 
+	public function removeClient($socket) {
+		$this->clients->detach($socket);
+	}
+
+	public function connect($socket, $username) {
+		foreach ($this->clients as $client) {
+			$socket->send(formatStr("connected", $this->clients[$client]));
+		}
+		$this->addClient($socket, $username);
+		$this->send(formatStr("connected", $username));
+	}
+
+	public function disconnect($socket) {
+		$username = $this->clients[$socket];
+		$this->clients->detach($socket);
+		$this->send(formatStr("disconnected", $username));
+	}
+
 	public function setGame($game) {
 		$this->game = $game;
 	}

@@ -50,17 +50,17 @@ session_start()
 			<div class="subtitle">Scegli la tua navicella</div>
 			<div class="grid">
 				<div class="grid-el clickable" onclick="creaPartita(2)">
-					<div class="el-img"><img src="../src/torpedo.png" /></div>
+					<div class="el-img"><img src="../src/sprite/torpedo.png" /></div>
 					<div class="el-name">Torpedo</div>
 					<div class="el-desc">2 giocatori</div>
 				</div>
 				<div class="grid-el clickable" onclick="creaPartita(3)">
-					<div class="el-img"><img src="../src/torpedo.png" /></div>
+					<div class="el-img"><img src="../src/sprite/torpedo.png" /></div>
 					<div class="el-name">Incrociatore</div>
 					<div class="el-desc">3 giocatori</div>
 				</div>
 				<div class="grid-el clickable" onclick="creaPartita(4)">
-					<div class="el-img"><img src="../src/torpedo.png" /></div>
+					<div class="el-img"><img src="../src/sprite/torpedo.png" /></div>
 					<div class="el-name">Corazzato</div>
 					<div class="el-desc">4 giocatori</div>
 				</div>
