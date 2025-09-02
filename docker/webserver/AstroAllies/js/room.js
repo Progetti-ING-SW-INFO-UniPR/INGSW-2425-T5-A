@@ -1,6 +1,7 @@
 let connected = 0;
 let maxPlayers = parseInt(urlParams.get("players"));
 let id = urlParams.get("id");
+let isCaptain = false;
 
 if (id == "") id = null;
 // if (maxPlayers == null) maxPlayers = 4;
@@ -46,24 +47,37 @@ function connect(username) {
 	let div = document.getElementById("player"+connected);
 	if (div == null) {
 		let grid = document.getElementById("players");
-		grid.appendChild(getPlayer(connected, username));
+		grid.appendChild(getPlayer (connected, username));
 	} else {
 		div.innerHTML = "";
 		div.appendChild(document.createTextNode(username));
 	}
 	connected++;
+	if(connected >= maxPlayers && isCaptain) {
+		document.getElementById("start").disaled = false;
+	}
 }
 
 function disconnect(username) {
-	let div = document.getElementById("player"+connected);
-	if (div == null) {
-		let grid = document.getElementById("players");
-		grid.appendChild(getPlayer(connected, username));
-	} else {
-		div.innerHTML = "";
-		div.appendChild(document.createTextNode(username));
+	let i = 0;
+	for(i = 0; i < connected; i++) {
+		let div = document.getElementById("player"+i);
+		if(div.innerHTML == username) {
+			break;
+		}
 	}
-	connected++;
+	connected--;
+	for(; i < connected; i++) {
+		let div = document.getElementById("player"+i);
+		let div2 = document.getElementById("player"+(i+1));
+		div.innerHTML = div2.innerHTML;
+	}
+	document.getElementById("player"+i).innerHTML = "Reclutamento...";
+
+	if(connected < maxPlayers || !isCaptain) {
+		document.getElementById("start").disaled = true;
+	}
+	newAlert(username+" è uscito", username+" ha abbandonato la nave", 2);
 }
 
 function cancel() {

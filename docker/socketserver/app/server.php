@@ -8,7 +8,7 @@ use Ratchet\WebSocket\WsServer;
 require_once './includes/Room.php';
 
 function formatData($code, $data) {
-	return '{"code":"'.$code.'", "data": '.$data.'}';
+	return '{"code":"'.$code.'", "data": '.json_encode($data).'}';
 }
 
 function formatStr($code, $str) {
@@ -48,6 +48,7 @@ class MyServer implements MessageComponentInterface {
 	}
 
 	public function onMessage(ConnectionInterface $from, $msg) {
+		echo $msg."\n";
 		$msg = json_decode($msg);
 		switch ($msg->code) {
 			case "connect":
@@ -58,31 +59,41 @@ class MyServer implements MessageComponentInterface {
 				break;
 			case "create":
 				$id = uniqid();
-				$this->rooms[$id] = new Room($id);
-				$from->send(formatStr("room", $id));
+				try {
+					$maxPlayers = intval($msg->data);
+					if($maxPlayers > 5 || $maxPlayers < 1) break;
+					$this->rooms[$id] = new Room($id, $maxPlayers);
+					$from->send(formatStr("room", $id));
+				} catch (Error $err) {
+					echo $err;
+				}
 				break;
 			case "join":
 				$id = $msg->data;
 				try {
 					$room = $this->rooms[$id];
 					if(!$room->isStarted()) {
-						$room->connect($from, $this->clients[$from]);
+						if(!$room->connect($from, $this->clients[$from])) {
+							$err = ["name" => "Stanza Piena",
+									"desc" => "La Stanza a cui hai provato a connetterti è già al completo"];
+							$from->send(formatData("error", $err));
+						}
+					} else {
+						$err = ["name" => "Partita già in corso",
+								"desc" => "La Partita a cui hai provato a connetterti è già cominciata"];
+						$from->send(formatData("error", $err));
 					}
-				} catch (Exception $err) {
+				} catch (Error $err) {
 					echo $err;
 				}
 				break;
 			case "start":
 				break;
-			case "gas":
+			case "keydown":
 				break;
-			case "sprint":
-				break;
-			case "turn":
+			case "keyup":
 				break;
 			case "shoot":
-				break;
-			case "comm":
 				break;
 			case "sync":
 				break;

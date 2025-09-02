@@ -70,7 +70,7 @@ session_start()
 	<div class="shadow hidden" id="join" onclick="toggle('join');">
 		<div class="menu" onmouseenter="stopProp(this)">
 			<div class="subtitle">Inserisci Codice</div>
-			<div class="element clickable"><input type="text" name="roomid" id="roomid" maxlength="9" autocomplete="off"/></div>
+			<div class="element clickable"><input type="text" name="roomid" id="roomid" maxlength="20" autocomplete="off"/></div>
 			<div class="element clickable"><button class="btn" onclick="join();">Unisciti</button></div>
 		</div>
 	</div>
