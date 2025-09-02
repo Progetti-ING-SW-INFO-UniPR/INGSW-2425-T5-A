@@ -1,39 +1,46 @@
 let field = document.getElementById("field"); // canvas
-let g = document.getElementById("field").getContext("2d"); //context
+let g = field.getContext("2d"); //context
 
-const imageCache = {};
+let imageCache = {};
 /* ricevuto l'elenco dei percorsi delle immagini li carica in imageCache */
+/**
+ * @param {*} assets {"nome": "url", "altronome": "altrourl"} 
+ */
 function loadAssets(assets){
     console.log("Caricamento Assets...");
-    assets.array.forEach(src => {
+    for (let nome in assets) {
         const img = new Image();
-        img.src = src;
+        img.src = assets[nome];
         img.onload = () => {
-            imageCache[src] = img;
-        }
-    });
+            imageCache[nome] = img;
+        };
+    }
     console.log("Assets Caricati!");
 }
-/* src stringa dell'assets (ship, asteroid...) */
-function drawAsset(src, x, y, w, h, a){
-    const img = imageCache[src];
+/* src stringa dell'assets (ship, asteroid...) 
+    a in radianti
+*/
+function drawAsset(nome, x, y, w, h, a){
+    const img = imageCache[nome];
     if(!img) return; //immagine non ancora caricata;
 
     g.save();
     g.translate(x+w/2, y+h/2); // riferimento il centro dell'immagine
-    g.rotate(a * Math.PI /180); // converte in radianti, solo a se già in rad
+    g.rotate(a);
     g.drawImage(img, -w/2, -h/2, w, h);
     g.restore();
 }
 
 /* 
-x,y devono essere il centro della navicella
 lenght=60px poichè la navicella è 75x75 -> dal centro in diagonale serve > 53
+a in rad
 */
-function drawCannon(x, y, a, color="white", length=60) { 
+function drawCannon(x, y, w, h, a, color="white", length=60) { 
 
-  const xEnd = x + length * Math.cos(a * Math.PI / 180); // solo a se già in radianti
-  const yEnd = y + length * Math.sin(a * Math.PI / 180);
+  x = x+w/2;
+  y = y+h/2;
+  const xEnd = x + length * Math.cos(a);
+  const yEnd = y + length * Math.sin(a);
 
   g.save();
   g.lineWidth = 3; //spessore in pixel 
@@ -73,7 +80,7 @@ function drawComms(type) {
     g.save();
     g.font = "20px Arial";
     g.filStyle = "white";
-    g.textAlign = "left";
+    g.textAlign = "right";
     g.textBaseline = "top";
 
     let  comm;
@@ -106,9 +113,4 @@ function drawComms(type) {
 
     g.fillText(comm, 10 , 10); //10 px di margine
     g.restore();
-}
-
-// quelli attivi o i drop?
-function drawPowerUps() {
-	
-}
+}   

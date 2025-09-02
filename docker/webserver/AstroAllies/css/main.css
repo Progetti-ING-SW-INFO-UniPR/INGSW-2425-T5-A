@@ -299,10 +299,12 @@
 	top: calc(var(--ast-size)*-1.5);
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
-    background: var(--ast-color);
+    /* background: var(--ast-color); */
+	background-image: url("../src/asteroid.png");
 	/* border: solid red; */
 }
 
+/*
 .ast:before {
     content: "";
     position: absolute;
@@ -326,6 +328,7 @@
     width: calc(var(--ast-size)*0.44);
     height: 0;
 }
+*/
 
 .ast:nth-child(even) {
 	animation-name: ast-even;
