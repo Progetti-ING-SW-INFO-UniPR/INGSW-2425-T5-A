@@ -1,10 +1,11 @@
+/*********** GRAFICA ***********/
 let field = document.getElementById("field"); // canvas
 let g = field.getContext("2d"); //context
 
 let imageCache = {};
-/* ricevuto l'elenco dei percorsi delle immagini li carica in imageCache */
 /**
- * @param {*} assets {"nome": "url", "altronome": "altrourl"} 
+ * Caricamento in cache assets @var imageCache
+ * @param {object} assets {"nome": "url", "altronome": "altrourl"} 
  */
 function loadAssets(assets){
     console.log("Caricamento Assets...");
@@ -17,9 +18,16 @@ function loadAssets(assets){
     }
     console.log("Assets Caricati!");
 }
-/* src stringa dell'assets (ship, asteroid...) 
-    a in radianti
-*/
+/**
+ * Disegna l'asset, riceca nella cache @var imageCache 
+ * @param {string} nome nome dell'assets
+ * @param {float} x posizione dell'oggetto (angolo alto sinistra)
+ * @param {float} y posizione dell'oggetto (angolo alto sinistra)
+ * @param {float} w larghezza oggetto
+ * @param {float} h larghezza oggetto
+ * @param {float} a angolo alfa rad della direzione dell'oggetto
+ * 
+ */
 function drawAsset(nome, x, y, w, h, a){
     const img = imageCache[nome];
     if(!img) return; //immagine non ancora caricata;
@@ -31,10 +39,18 @@ function drawAsset(nome, x, y, w, h, a){
     g.restore();
 }
 
-/* 
-lenght=60px poichè la navicella è 75x75 -> dal centro in diagonale serve > 53
-a in rad
-*/
+/**
+ * Disegna la linea di tiro del cannone 
+ * @param {float} x posizione della navicella (angolo alto sinistra)
+ * @param {float} y posizione della navicella (angolo alto sinistra)
+ * @param {float} w larghezza navicella
+ * @param {float} h larghezza navicella
+ * @param {float} a angolo alfa rad della direzione del cannone
+ * @param {string} color colore linea default white
+ * @param {float} length lunghezza linea default 60
+ * 
+ * default lengh = 60 per non essere nascosta dalla navicella (75)
+ */
 function drawCannon(x, y, w, h, a, color="white", length=60) { 
 
   x = x+w/2;
@@ -53,7 +69,10 @@ function drawCannon(x, y, w, h, a, color="white", length=60) {
   
 }
 
-// disegna il punteggio in alto al centro
+/**
+ * Disegna il punteggio della partita
+ * @param {int} score punteggio corrente
+ */
 function drawScore(score) { 
     g.save();
     g.font = "30px Arial";
@@ -64,7 +83,10 @@ function drawScore(score) {
     g.restore();
 }
 
-//disegna l'energia in basso a sinistra
+/**
+ * Disegna l'energia corrente
+ * @param {int} energy energia navicella
+ */
 function drawEnergy(energy) {
     g.save();
     g.font = "20px Arial";
@@ -75,7 +97,10 @@ function drawEnergy(energy) {
     g.restore();
 }
 
-// comm è un intero positivo
+/**
+ * Disegna le comunicazioni ricevute
+ * @param {int} type da 1 a 7 default ""
+ */
 function drawComms(type) {
     g.save();
     g.font = "20px Arial";
@@ -114,3 +139,8 @@ function drawComms(type) {
     g.fillText(comm, 10 , 10); //10 px di margine
     g.restore();
 }   
+
+/*********** CONTROLLER ***********/
+
+
+
