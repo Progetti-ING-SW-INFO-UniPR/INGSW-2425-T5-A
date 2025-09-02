@@ -66,7 +66,7 @@ function drawCannon(x, y, w, h, a, color="white", length=60) {
   g.lineTo(xEnd, yEnd); // punto finale
   g.stroke();           // disegna la linea
   g.restore();
-  
+
 }
 
 /**
@@ -142,5 +142,89 @@ function drawComms(type) {
 
 /*********** CONTROLLER ***********/
 
+//attaccarre add event listener window 
+function captainKeyDown(KeyboardEvent){
+    const commands = ["KeyW", "KeyA","KeyS","KeyD",
+                      "ArrowUP","ArrowLeft","ArrowDown","ArrowRight","Space",
+                      "Digit0","Digit1","Digit2","Digit3","Digit4","Digit5","Digit6","Digit7","Digit8","Digit9"];
+    let keycode = KeyboardEvent.code;
+    let sendKeyDown = (key) => send2server("keydown", key);
+    switch(keycode){
+        case "KeyW":
+            keycode = "ArrowUP";
+            break;
+        case "KeyA":
+            keycode = "ArrowLeft";
+            break;
+        case "KeyS":
+            keycode = "ArrowDown";
+            break;
+        case "KeyD":
+            keycode = "Arrowright";
+            break;
+    }   
+    if(commands.findIndex(keycode) > -1)    
+        sendKeyDown(keycode);
+ }
+
+function captainKeyUp(KeyboardEvent){
+    const commands = ["KeyW", "KeyA","KeyS","KeyD",
+                      "ArrowUP","ArrowLeft","ArrowDown","ArrowRight"];
+    let keycode = KeyboardEvent.code;
+    let sendKeyUp = (key) => send2server("keyup", key);
+    switch(keycode){
+        case "KeyW":
+            keycode = "ArrowUP";
+            break;
+        case "KeyA":
+            keycode = "ArrowLeft";
+            break;
+        case "KeyS":
+            keycode = "ArrowDown";
+            break;
+        case "KeyD":
+            keycode = "Arrowright";
+            break;
+    }   
+    if(commands.findIndex(keycode) > -1)    
+        sendKeyUp(keycode);
+ }
+
+function cannonKeyDown(KeyboardEvent){
+    const commands = ["Digit0","Digit1","Digit2","Digit3","Digit4","Digit5","Digit6","Digit7","Digit8","Digit9"];
+    let keycode = KeyboardEvent.code;
+    let sendKeyDown = (key) => send2server("keydown", key);
+    switch(keycode){
+        case "Space":
+        case "KeyW":
+        case "ArrowUP":
+            send2server("shoot", a);send2server();
+            break;
+        case "KeyA":
+        case "ArrowLeft":
+            //setinterval
+            break;
+        case "KeyD":
+        case "ArrowRight":
+            //setinterval
+            break;
+    } 
+    if(commands.findIndex(keycode) > -1)    
+        sendKeyDown(keycode);
+ }
+
+ function cannonKeyUp(KeyboardEvent){
+    let keycode = KeyboardEvent.code;
+    switch(keycode){
+        case "KeyA":
+        case "ArrowLeft":
+            //clear interval
+            break;
+        case "KeyD":
+        case "ArrowRight":
+            //clear interval
+            break;
+    } 
+ }
 
 
