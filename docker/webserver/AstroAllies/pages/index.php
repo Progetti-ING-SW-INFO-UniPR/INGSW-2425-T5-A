@@ -55,12 +55,12 @@ session_start()
 					<div class="el-desc">2 giocatori</div>
 				</div>
 				<div class="grid-el clickable" onclick="creaPartita(3)">
-					<div class="el-img"><img src="../src/torpedo.png" /></div>
+					<div class="el-img"><img src="../src/incrociatore.png" /></div>
 					<div class="el-name">Incrociatore</div>
 					<div class="el-desc">3 giocatori</div>
 				</div>
 				<div class="grid-el clickable" onclick="creaPartita(4)">
-					<div class="el-img"><img src="../src/torpedo.png" /></div>
+					<div class="el-img"><img src="../src/corazzata.png" /></div>
 					<div class="el-name">Corazzato</div>
 					<div class="el-desc">4 giocatori</div>
 				</div>
