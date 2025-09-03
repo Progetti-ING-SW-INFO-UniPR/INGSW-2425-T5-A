@@ -88,6 +88,14 @@ class MyServer implements MessageComponentInterface {
 				}
 				break;
 			case "start":
+				$id = $msg->data;
+				if(array_key_exists($id, $this->rooms)) {
+					$room = $this->rooms[$id];
+					if($room->isFull()) {
+						echo 'Room:'.$room->id.' Starting'."\n";
+						$room->start();
+					}
+				}
 				break;
 			case "keydown":
 				break;
@@ -104,10 +112,14 @@ class MyServer implements MessageComponentInterface {
 	}
 
 	public function onClose(ConnectionInterface $conn) {
+		if (!$this->clients->contains($conn)) return;
 		$this->clients->detach($conn);
-		foreach ($this->rooms as $room) {
+		foreach ($this->rooms as $i => $room) {
 			if($room->getClients()->contains($conn)) {
 				$room->disconnect($conn);
+				if($room->isEmpty()) {
+					unset($this->rooms[$i]);
+				}
 			}
 		}
 	}

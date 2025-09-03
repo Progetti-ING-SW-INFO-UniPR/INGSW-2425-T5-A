@@ -363,6 +363,10 @@ class Game {
             $this->status = $this->status == Status::Running ? Status::Pause : Status::Running;
     }
 
+	public function getJson() : string {
+		return "";
+	}
+
 }
 
 ?>

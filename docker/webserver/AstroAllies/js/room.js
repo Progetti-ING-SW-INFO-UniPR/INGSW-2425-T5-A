@@ -6,7 +6,7 @@ let isCaptain = false;
 if (id == "") id = null;
 // if (maxPlayers == null) maxPlayers = 4;
 
-function getPlayer(n, name) {
+function getPlayer(n, name, title) {
 	let divEl = document.createElement("div");
 	let divTitle = document.createElement("div");
 	let divName = document.createElement("div");
@@ -18,7 +18,7 @@ function getPlayer(n, name) {
 	divTitle.id = "player"+n;
 
 	divTitle.appendChild(document.createTextNode(name));
-	divName.appendChild(document.createTextNode(n+"° Cannoniere"));
+	divName.appendChild(document.createTextNode(title));
 
 	divEl.appendChild(divTitle);
 	divEl.appendChild(divName);
@@ -34,8 +34,10 @@ function initNames() {
 	 */
 	let grid = document.getElementById("players");
 
-	for (let i = 1; i < maxPlayers; i++) {
-		let divEl = getPlayer(i, "Reclutamento...");
+
+	for (let i = connected; i < maxPlayers; i++) {
+		let title = i == 0 ? "Capitano" : `${i}° Cannoniere`;
+		let divEl = getPlayer(i, "Reclutamento...", title);
 
 		grid.appendChild(divEl);
 	}
@@ -47,14 +49,15 @@ function connect(username) {
 	let div = document.getElementById("player"+connected);
 	if (div == null) {
 		let grid = document.getElementById("players");
-		grid.appendChild(getPlayer (connected, username));
+		let title = connected == 0 ? "Capitano" : `${connected}° Cannoniere`;
+		grid.appendChild(getPlayer(connected, username, title));
 	} else {
 		div.innerHTML = "";
 		div.appendChild(document.createTextNode(username));
 	}
 	connected++;
 	if(connected >= maxPlayers && isCaptain) {
-		document.getElementById("start").disaled = false;
+		document.getElementById("start").disabled = false;
 	}
 }
 
@@ -75,15 +78,15 @@ function disconnect(username) {
 	document.getElementById("player"+i).innerHTML = "Reclutamento...";
 
 	if(connected < maxPlayers || !isCaptain) {
-		document.getElementById("start").disaled = true;
+		document.getElementById("start").disabled = true;
 	}
 	newAlert(username+" è uscito", username+" ha abbandonato la nave", 2);
 }
 
 function cancel() {
-	TODO();
+	window.location.href = "./index.php";
 }
 
 function start() {
-	TODO();
+	send2server("start", id);
 }

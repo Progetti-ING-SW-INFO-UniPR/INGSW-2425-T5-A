@@ -1,6 +1,8 @@
 <?php
 require 'vendor/autoload.php';
 use Ratchet\ConnectionInterface;
+use React\EventLoop\Loop;
+use React\EventLoop\TimerInterface;
 require_once 'Game.php';
 
 class Room {
@@ -11,13 +13,17 @@ class Room {
 	private bool $started;
 	private int $maxPlayers;
 	private array $comms;
+	private TimerInterface $loop;
+	private int $tick;
+	
 
 	public function __construct($id, $maxPlayers)
 	{
 		$this->clients = new SplObjectStorage();
 		$this->started = false;
 		$this->id = $id;
-		$this->maxPlayers = $maxPlayers;;
+		$this->maxPlayers = $maxPlayers;
+		$this->tick = 0;
 	}
 
 	public function addClient($socket, $username) {
@@ -41,6 +47,7 @@ class Room {
 		$this->addClient($socket, $username);
 		$this->send(formatStr("connected", $username));
 		$socket->send(formatStr("captain", $this->clients[$this->captain]));
+		$socket->send(formatData("maxplayers", $this->maxPlayers));
 		return true;
 	}
 
@@ -70,8 +77,35 @@ class Room {
 	}
 
 	public function start() {
-		$this->started = true;
 		$this->game = new Game($this->id);
+		$this->started = true;
+		$room = $this;
+		$game = $this->game;
+		echo 'Room:'.$room->id.' Started'."\n";
+		$this->send(formatStr("start", ""));
+		$this->loop = Loop::addPeriodicTimer(1/20, function () use ($room, $game){
+			echo 'Room:'.$room->id.' Tick:'.$this->tick."\n";
+			$game->update();
+			$json = $game->getJson();
+			$room->send(formatStr("game", $json));
+			$room->nextTick();
+			if($room->getTick() == 20*5) {
+				echo 'Closing room:'.$room->id.' after ~5 seconds'."\n";
+				$room->stop();
+			}
+		});
+	}
+
+	public function getTick() {
+		return $this->tick;
+	}
+
+	public function nextTick() {
+		$this->tick++;
+	}
+
+	public function stop() {
+		Loop::cancelTimer($this->loop);
 	}
 
 	public function isStarted() {
@@ -82,5 +116,13 @@ class Room {
 		foreach ($this->clients as $socket) {
 			$socket->send($message);
 		}
+	}
+
+	public function isEmpty() : bool{
+		return $this->clients->count() == 0;
+	}
+
+	public function isFull() : bool{
+		return $this->clients->count() >= $this->maxPlayers;
 	}
 }

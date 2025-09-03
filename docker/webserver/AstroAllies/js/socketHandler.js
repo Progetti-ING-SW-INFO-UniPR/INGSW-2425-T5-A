@@ -38,6 +38,12 @@ websocket.onmessage = (ev) => {
 			id = msg.data;
 			websocket.send(`{"code": "join", "data":"${id}"}`);
 			break;
+		case "maxplayers":
+			if(msg.data > 1 && msg.data < 5) {
+				maxPlayers = msg.data;
+				initNames();
+			}
+			break;
 		case "connected":
 			connect(msg.data);
 			break;
@@ -48,5 +54,8 @@ websocket.onmessage = (ev) => {
 			if(msg.data == username)
 				isCaptain = true;
 			break;
+		case "start":
+			document.getElementById("room").hidden = true;
+			document.getElementById("game").hidden = false;
 	}
 };
