@@ -59,8 +59,8 @@ if (!isset($_SESSION["USERNAME"])) {
 	</div>
 
 	<footer>
-		<script src="../js/socketHandler.js"></script>
 		<script src="../js/game.js"></script>
+		<script src="../js/socketHandler.js"></script>
 	</footer>
 </body>
 </html>

@@ -73,6 +73,7 @@ class Game {
     protected $asteroids = array(); 
     protected $items = array();
     protected $friction;
+	protected $communications = array();
 
     public function __construct(String $id, Box $pf=PLAYING_FIELD, Box $sf=SPAWNING_FIELD, Box $ea=EXFIL_AREA){
         $this->id = $id;
@@ -107,7 +108,7 @@ class Game {
     public function set_status(Status $p){
         $this->status = $p;
     }
-    public function get_playing_field() : Box {
+    public function get_playing_field():Box{
         return $this->playing_field;
     }
     public function set_playing_field(Box $pf){
@@ -157,6 +158,13 @@ class Game {
     public function add_asteroid(Asteroid $a){
         $this->asteroids[] = $a;
     }
+	
+	public function set_communication($user, $comm) {
+		$this->communications[$user] = $comm;
+	}
+	public function get_communications():array{
+		return $this->communications;
+	}
 /**
  * Rimuove un oggetto Entity dal corretto array.
  * 
@@ -364,7 +372,43 @@ class Game {
     }
 
 	public function getJson() : string {
-		return "";
+		$ret = '{"asteroids":[';
+		foreach($this->asteroids as $ast) {
+			$ret = $ret.$ast->get_hitbox()->get_json().',';
+		}
+		$ret = $ret.'],"items":[';
+		foreach($this->items as $item) {
+			$ret = $ret.$item->get_json().',';
+		}
+		$ret = $ret.'],"bullets":[';
+		foreach($this->bullets as $bullet) {
+			$ret = $ret.$bullet->get_hitbox()->get_json().',';
+		}
+		$ret = $ret.'],"ship":'.$this->ship->get_json().','.
+					  '"energy":'.$this->ship->get_energy().','.
+					  '"maxenergy":'.$this->ship->get_max_energy().','.
+					  '"points":'.$this->score.','.
+					  '"comms":{';
+		foreach($this->communications as $user => $comm) {
+			$ret = $ret.'"'.$user.'":'.$comm.',';
+		}
+		$ret = $ret.'},"status":"';
+		switch($this->status) {
+			case Status::Running:
+				$ret = $ret.'running';
+				break;
+			case Status::Won:
+				$ret = $ret.'won';
+				break;
+			case Status::Lost:
+				$ret = $ret.'lost';
+				break;
+			case Status::Pause:
+				$ret = $ret.'pause';
+				break;
+		}
+		$ret = $ret.'"}';
+		return $ret;
 	}
 
 }

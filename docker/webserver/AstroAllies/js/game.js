@@ -15,7 +15,7 @@ let data = {
         {x: 0, y: 0, w: 0, h: 0, type: 0},
         {x: 0, y: 0, w: 0, h: 0, type: 0} //type == 1 -> points.png type > 1 powerup.png
     ],
-    bulltes: [
+    bulletes: [
         {x: 0, y: 0, w: 0, h: 0},
         {x: 0, y: 0, w: 0, h: 0}
     ],
@@ -28,7 +28,12 @@ let data = {
         "username": 0,
         "username": 0,
         "username": 0,
-    }
+    },
+	status: "running" //"running", "won", "lost", "pause"
+}
+
+function update(data) {
+	
 }
 
 let imageCache = {};

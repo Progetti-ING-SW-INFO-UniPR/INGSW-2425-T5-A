@@ -57,5 +57,9 @@ websocket.onmessage = (ev) => {
 		case "start":
 			document.getElementById("room").hidden = true;
 			document.getElementById("game").hidden = false;
+			break;
+		case "game":
+			update(msg.data);
+			break;
 	}
 };

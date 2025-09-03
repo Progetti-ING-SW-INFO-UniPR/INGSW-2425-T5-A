@@ -8,7 +8,7 @@ class Spaceship extends Entity{
     protected Bullet $ammo_type; // creare default bullet.
     protected float $roto_dir;
     protected float $roto_vel;
-    protected float $acceleration;
+    protected float $acceleration; //TODO: Controllare accelerazione e update, non tiene conto della direzione in cui sta accelerando
     protected float $boost;
 
     public function __construct(Vector $dir, Box $box, Bullet $b, int $e, float $ad, float $av, float $a, float $boost ,$g=null){
@@ -148,6 +148,12 @@ class Spaceship extends Entity{
             }
         }
     }
+
+	public function get_json():string{
+		return str_replace('}', 
+						   ', "a":'.$this->roto_dir.'}', //TODO: controllare che questo sia l'angolo in qui guarda l'astronave
+						   $this->hitbox->get_json());
+	}
 
 }
 

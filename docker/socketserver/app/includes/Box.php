@@ -60,5 +60,13 @@ class Box
         $this->y += $dy;
     }
 
+	public function get_json() {
+		return '{"x":'.$this->x.
+			  ', "y":'.$this->y.
+			  ', "w":'.$this->width.
+			  ', "h":'.$this->height.
+			  '}';
+	}
+
 }
 ?>

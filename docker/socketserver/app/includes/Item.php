@@ -44,7 +44,12 @@ class Item extends Entity{
             $this->game->remove($this);
         }
     }
-    
+
+    public function get_json():string{
+		return str_replace('}', 
+						   ', "type":'.$this->type.'}',
+						   $this->hitbox->get_json());
+	}
 }
 
 ?>
