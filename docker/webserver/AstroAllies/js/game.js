@@ -110,9 +110,11 @@ function drawAsset(nome, x, y, w, h, a=0){
     if(!img) return; //immagine non ancora caricata;
 
     g.save();
+    g.save();
     g.translate(x+w/2, y+h/2); // riferimento il centro dell'immagine
     g.rotate(a);
     g.drawImage(img, -w/2, -h/2, w, h);
+    g.restore();
     g.restore();
 }
 
@@ -135,14 +137,14 @@ function drawCannon(x, y, w, h, a, color="white", length=40) {
   const xEnd = x + length * Math.cos(a);
   const yEnd = y + length * Math.sin(a);
 
-  //g.save();
+  g.save();
   g.lineWidth = 3; //spessore in pixel 
   g.beginPath();
   g.moveTo(x, y);       // punto iniziale
   g.lineTo(xEnd, yEnd); // punto finale
   g.strokeStyle = color;
   g.stroke();           // disegna la linea
-  //g.restore();
+  g.restore();
 
 }
 
@@ -151,13 +153,13 @@ function drawCannon(x, y, w, h, a, color="white", length=40) {
  * @param {int} score punteggio corrente
  */
 function drawScore(score) { 
-    //g.save();
+    g.save();
     g.font = "30px Arial";
     g.fillStyle = "white";
     g.textAlign = "middle";
     g.textBaseline = "top";
     g.fillText("Score: " + score, field.width / 2, 10); //10 px di margine
-    //g.restore();
+    g.restore();
 }
 
 /**
@@ -165,13 +167,13 @@ function drawScore(score) {
  * @param {int} energy energia navicella
  */
 function drawEnergy(energy, maxenergy) {
-    //g.save();
+    g.save();
     g.font = "20px Arial";
     g.fillStyle = "white";
     g.textAlign = "left";
     g.textBaseline = "bottom";
-    g.fillText("Energy: " + energy + "/" + maxenergy, 10, field.height - 10); //10 px di margine
-    //g.restore();
+    g.fillText("Energy: " + energy + "/" + maxenergy, field.height - 10); //10 px di margine
+    g.restore();
 }
 
 /**
@@ -179,7 +181,7 @@ function drawEnergy(energy, maxenergy) {
  * @param {int} type da 1 a 7 default ""
  */
 function drawComms(user, type) {
-    //g.save();
+    g.save();
     g.font = "20px Arial";
     g.fillStyle = "white";
     g.textAlign = "right";
@@ -212,9 +214,10 @@ function drawComms(user, type) {
         default:
             comm = "";
     }
-
+    if(captainUsername == user)
+        g.fillStyle("yellow");
     g.fillText(comm + " |" + user, 10 , 10); //10 px di margine
-    //g.restore();
+    g.restore();
 }  
 
 // TODO
