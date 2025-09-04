@@ -1,6 +1,8 @@
 let idDiv = document.getElementById("code");
 
-let websocket = new WebSocket("ws://"+window.location.hostname+":8000/");
+let socketUrl = `wss://${window.location.host}/ws`;
+
+let websocket = new WebSocket(socketUrl);
 
 let username = document.getElementById("username").value;
 

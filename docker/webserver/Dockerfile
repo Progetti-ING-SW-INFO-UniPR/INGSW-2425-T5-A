@@ -1,7 +1,7 @@
 FROM php:8.1-apache
 
 # Abilita i moduli e installa strumenti
-RUN a2enmod ssl rewrite
+RUN a2enmod ssl rewrite proxy proxy_http proxy_wstunnel
 RUN apt-get update && apt-get install -y \
     iputils-ping traceroute curl openssh-server default-mysql-client && \
     docker-php-ext-install mysqli && \
@@ -9,12 +9,8 @@ RUN apt-get update && apt-get install -y \
     docker-php-ext-enable mysqli && \
     mkdir /var/run/sshd -p
 
-# Genera certificati SSL self-signed
-RUN openssl req -x509 -nodes -days 365 \
-  -subj "/C=IT/ST=Italy/L=Rome/O=AstroAllies/CN=localhost" \
-  -newkey rsa:2048 \
-  -keyout /etc/ssl/certs/apache-selfsigned.key \
-  -out /etc/ssl/certs/apache-selfsigned.crt
+# Copia certificati SSL
+COPY ./certs /etc/ssl/certs
 
 # Configura Apache per usare SSL
 COPY ./default-ssl.conf /etc/apache2/sites-available/default-ssl.conf

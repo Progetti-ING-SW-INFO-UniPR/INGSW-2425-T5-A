@@ -15,8 +15,8 @@ services:
     command: --event-scheduler=ON
     volumes:
       - aa_db_data:/var/lib/mysql
-    networks:
-      - aa_network
+    # networks:
+    #   - aa_network
 
   aa_app:
     build: ./webserver
@@ -33,10 +33,11 @@ services:
       MYSQL_PASSWORD: userpassword
     volumes:
       - ./webserver/AstroAllies:/var/www/html
+      - ./webserver/certs:/etc/ssl/certs
     depends_on:
       - aa_db
-    networks:
-      - aa_network
+    # networks:
+    #   - aa_network
     
   aa_socket:
     build: ./socketserver
@@ -49,10 +50,12 @@ services:
       - ./socketserver/app:/app
     depends_on:
       - aa_app
+    # networks:
+    #   - aa_network
 
 volumes:
   aa_db_data:
 
-networks:
-  aa_network:
-    driver: bridge
+# networks:
+#   aa_network:
+#     driver: bridge
