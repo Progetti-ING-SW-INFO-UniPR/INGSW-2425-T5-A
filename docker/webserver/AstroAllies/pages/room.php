@@ -54,7 +54,7 @@ if (!isset($_SESSION["USERNAME"])) {
 	<div id="game" hidden>
 		<div class="bg"></div>
 		<div class="game">
-			<canvas id="field"></canvas>
+			<canvas id="field" width="1200" height="800"></canvas>
 		</div>
 	</div>
 
