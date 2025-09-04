@@ -5,6 +5,32 @@ use React\EventLoop\Loop;
 use React\EventLoop\TimerInterface;
 require_once 'Game.php';
 
+//VECTOR 
+$VECTOR = new Vector(0,0);
+//GAME
+$GAME_NULL = Game::null_game();
+//ITEM
+$ITEM_SIZE = 10;
+$POINT = 15;
+//BULLET
+$BULLET_VEL = 1;
+$BULLET_SIZE = 4;
+$BULLET_HITBOX = new Box(600,400,$BULLET_SIZE,$BULLET_SIZE);
+$BULLET = new Bullet($VECTOR,$BULLET_HITBOX, 1, $GAME_NULL);
+// GAME
+$SPAWNING_FIELD = new Box(0,0,1400,1000);
+$PLAYING_FIELD = new Box(200,200,1200,800);
+$EXFIL_AREA = new Box(0,750,1200,750);
+// SPACESHIP 
+$MAX_ENERGY = 20;
+$ACCELERATION = 10;
+$FRICTION = 5;
+$BOOST = 5;
+$SHIP_HITBOX = new Box(600,400,40,40);
+$SPACESHIP = new Spaceship($VECTOR, $SHIP_HITBOX, $BULLET, $MAX_ENERGY, 0, 10, $ACCELERATION, $BOOST, $GAME_NULL);
+// ASTEROID
+$ASTEROID_SIZE = 30; 
+
 class Room {
 	public readonly string $id;
 	private SplObjectStorage $clients;
@@ -77,7 +103,8 @@ class Room {
 	}
 
 	public function start() {
-		$this->game = new Game($this->id);
+		global $PLAYING_FIELD, $SPAWNING_FIELD, $EXFIL_AREA, $FRICTION, $SPACESHIP, $ASTEROID_SIZE;
+		$this->game = new Game($this->id, $PLAYING_FIELD->deep_copy(), $SPAWNING_FIELD->deep_copy(), $EXFIL_AREA->deep_copy(), $FRICTION, $SPACESHIP->deep_copy(), $ASTEROID_SIZE);
 		$this->started = true;
 		$room = $this;
 		$game = $this->game;

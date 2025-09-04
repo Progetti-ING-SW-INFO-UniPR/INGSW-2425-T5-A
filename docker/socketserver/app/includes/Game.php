@@ -8,32 +8,6 @@ require_once("Bullet.php");
 require_once("Spaceship.php");
 require_once("Status.php");
 
-//VECTOR 
-$DEFAULT_VECTOR = new Vector(0,0);
-//GAME
-$GAME_NULL = Game::null_game();
-//ITEM
-$ITEM_SIZE = 10;
-$DEFAULT_PNT = 15;
-//BULLET
-$DEFAULT_BULLET_VEL = 1;
-$BULLET_SIZE = 4;
-$DEFAULT_BULLET_HITBOX = new Box(600,400,$BULLET_SIZE,$BULLET_SIZE);
-$DEFAULT_BULLET = new Bullet($DEFAULT_VECTOR,$DEFAULT_BULLET_HITBOX, 1, $GAME_NULL);
-// GAME
-$SPAWNING_FIELD = new Box(0,0,1400,1000);
-$PLAYING_FIELD = new Box(200,200,1200,800);
-$EXFIL_AREA = new Box(0,750,1200,750);
-// SPACESHIP 
-$DEFAULT_MAX_ENERGY = 20;
-$DEFAULT_ACCELERATION = 10;
-$DEFAULT_FRICTION = 5;
-$DEFAULT_BOOST = 5;
-$SHIP_HITBOX = new Box(600,400,40,40);
-$DEFAULT_SHIP = new Spaceship($DEFAULT_VECTOR, $SHIP_HITBOX, $DEFAULT_BULLET, $DEFAULT_MAX_ENERGY, 0, 10, $DEFAULT_ACCELERATION, $DEFAULT_BOOST, $GAME_NULL);
-// ASTEROID
-$ASTEROID_SIZE = 30; 
-
 // RNG DROP RATE
 //   0           1       2            3          4
 // no drop | punti | upgrade 1 | upgrade 2 | upgrade 3 
@@ -394,7 +368,7 @@ class Game {
 			$ret = $ret.'"'.$user.'":'.$comm.',';
 		}
 		$ret = $ret.'},"status":"';
-		$ret = $ret.$this->status;
+		$ret = $ret.$this->status->value;
 		// switch($this->status) {
 		// 	case Status::Running:
 		// 		$ret = $ret.'running';
