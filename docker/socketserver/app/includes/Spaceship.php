@@ -91,7 +91,7 @@ class Spaceship extends Entity{
             $this->ammo_type->get_hitbox()->set_x($this->hitbox->get_x() + $offset_x);
             $this->ammo_type->get_hitbox()->set_y($this->hitbox->get_y() + $offset_y);
 
-            $b = new Bullet($dir, clone $this->ammo_type->get_hitbox(), $this->ammo_type->get_rank());
+            $b = new Bullet($dir, clone $this->ammo_type->get_hitbox(), $this->ammo_type->get_rank(), $this->game);
             $this->get_game()->add_bullet($b);
         }
     }

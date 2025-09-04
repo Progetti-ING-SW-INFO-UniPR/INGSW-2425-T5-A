@@ -351,10 +351,12 @@ class Game {
 		foreach($this->asteroids as $ast) {
 			$ret = $ret.$ast->get_hitbox()->get_json().',';
 		}
+		$ret = rtrim($ret, ",");
 		$ret = $ret.'],"items":[';
 		foreach($this->items as $item) {
 			$ret = $ret.$item->get_json().',';
 		}
+		$ret = rtrim($ret, ",");
 		$ret = $ret.'],"bullets":[';
 		foreach($this->bullets as $bullet) {
 			$ret = $ret.$bullet->get_hitbox()->get_json().',';
@@ -367,22 +369,9 @@ class Game {
 		foreach($this->communications as $user => $comm) {
 			$ret = $ret.'"'.$user.'":'.$comm.',';
 		}
+		$ret = rtrim($ret, ",");
 		$ret = $ret.'},"status":"';
 		$ret = $ret.$this->status->value;
-		// switch($this->status) {
-		// 	case Status::Running:
-		// 		$ret = $ret.'running';
-		// 		break;
-		// 	case Status::Won:
-		// 		$ret = $ret.'won';
-		// 		break;
-		// 	case Status::Lost:
-		// 		$ret = $ret.'lost';
-		// 		break;
-		// 	case Status::Pause:
-		// 		$ret = $ret.'pause';
-		// 		break;
-		// }
 		$ret = $ret.'"}';
 		return $ret;
 	}
