@@ -5,7 +5,7 @@ class Item extends Entity{
     protected int $type;
     protected int $pnt_val;
 
-    public function __construct(Vector $dir, Box $box, int $type, int $val, Game $g = null){
+    public function __construct(Vector $dir, Box $box, int $type, int $val, Game $g){
         parent::__construct($dir,$box,$g);
         $this->type = $type;
         $this->pnt_val = $val;
