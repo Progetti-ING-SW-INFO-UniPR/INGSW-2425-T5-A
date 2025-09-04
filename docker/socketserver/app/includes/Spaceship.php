@@ -118,7 +118,8 @@ class Spaceship extends Entity{
     public function boost(){
         if($this->energy > 0){
             $this->energy -= 1;
-            $this->velocity->sum_norm($this->boost);
+			$v = new Vector($this->current_acceleration->get_alfa_deg(), $this->boost);
+            $this->velocity->sum_vector($v);
         }
     }
 

@@ -222,12 +222,15 @@ class Game {
  */
     public function update(){
 		global $TICKS_PER_POINT;
+
+		if ($this->status!= Status::Running) return;
+
 		$this->tick++;
 		if($this->tick%$TICKS_PER_POINT == 0) $this->ship->gain_energy(1);
         
 		if($this->ship->get_hitbox()->check_overlap($this->exfil_area)){ //navicella esfiltra
             $this->game_win();
-            return;
+			return;
         }
         $this->ship->update();
         foreach($this->bullets as $b){
@@ -327,6 +330,8 @@ class Game {
                 $y = $h - ($rand_p - $w);
             }
         }
+		$x += $this->spawning_field->get_x();
+		$y += $this->spawning_field->get_y();
         //angolo verso il centro approssimativo
         $wp = $this->playing_field->get_width();
         $hp = $this->playing_field->get_height();
