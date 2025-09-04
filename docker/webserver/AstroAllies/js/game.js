@@ -13,6 +13,9 @@ const ASSETS = {"asteroid":"/src/sprite/asteroid.png",
 let cannon_dir = 0;
 let cannon_vel = 0.1; //rad
 
+let intRotateLeft;
+let intRotateRight;
+
 loadAsset(ASSETS);
 
 /**
@@ -283,15 +286,22 @@ function cannonKeyDown(KeyboardEvent){
             break;
         case "KeyA":
         case "ArrowLeft":
-            //setinterval
+            intRotateLeft = setInterval(rotateCannonLeft,100);
             break;
         case "KeyD":
         case "ArrowRight":
-            //setinterval
+            intRotateRight = setInterval(rotateCannonRight,100);
             break;
     } 
     if(commands.findIndex(keycode) > -1)    
         sendKeyDown(keycode);
+ }
+
+function rotateCannonLeft(){
+    cannon_dir += cannon_vel;
+ }
+ function rotateCannonRight(){
+    cannon_dir -= cannon_vel;
  }
 
  function cannonKeyUp(KeyboardEvent){
@@ -299,11 +309,11 @@ function cannonKeyDown(KeyboardEvent){
     switch(keycode){
         case "KeyA":
         case "ArrowLeft":
-            //clear interval
+            clearInterval(intRotateLeft);
             break;
         case "KeyD":
         case "ArrowRight":
-            //clear interval
+            clearInterval(intRotateRight);
             break;
     } 
  }
