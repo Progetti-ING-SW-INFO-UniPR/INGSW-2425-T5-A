@@ -172,7 +172,7 @@ function drawEnergy(energy, maxenergy) {
     g.fillStyle = "white";
     g.textAlign = "left";
     g.textBaseline = "bottom";
-    g.fillText("Energy: " + energy + "/" + maxenergy, field.height - 10); //10 px di margine
+    g.fillText("Energy: " + energy + "/" + maxenergy, 10, field.height - 10); //10 px di margine
     g.restore();
 }
 
@@ -234,13 +234,13 @@ function drawStatus(status){
 //attaccare add event listener window 
 function captainKeyDown(KeyboardEvent){
     const commands = ["KeyW", "KeyA","KeyS","KeyD",
-                      "ArrowUP","ArrowLeft","ArrowDown","ArrowRight","Space",
+                      "ArrowUp","ArrowLeft","ArrowDown","ArrowRight","Space",
                       "Digit0","Digit1","Digit2","Digit3","Digit4","Digit5","Digit6","Digit7","Digit8","Digit9"];
     let keycode = KeyboardEvent.code;
     let sendKeyDown = (key) => send2server("keydown", key);
     switch(keycode){
         case "KeyW":
-            keycode = "ArrowUP";
+            keycode = "ArrowUp";
             break;
         case "KeyA":
             keycode = "ArrowLeft";
@@ -249,7 +249,7 @@ function captainKeyDown(KeyboardEvent){
             keycode = "ArrowDown";
             break;
         case "KeyD":
-            keycode = "Arrowright";
+            keycode = "ArrowRight";
             break;
     }   
     if(commands.includes(keycode))
@@ -258,12 +258,13 @@ function captainKeyDown(KeyboardEvent){
 
 function captainKeyUp(KeyboardEvent){
     const commands = ["KeyW", "KeyA","KeyS","KeyD",
-                      "ArrowUP","ArrowLeft","ArrowDown","ArrowRight"];
+                      "ArrowUp","ArrowLeft","ArrowDown","ArrowRight"];
     let keycode = KeyboardEvent.code;
     let sendKeyUp = (key) => send2server("keyup", key);
+	if(KeyboardEvent.repeat) return;
     switch(keycode){
         case "KeyW":
-            keycode = "ArrowUP";
+            keycode = "ArrowUp";
             break;
         case "KeyA":
             keycode = "ArrowLeft";
@@ -272,7 +273,7 @@ function captainKeyUp(KeyboardEvent){
             keycode = "ArrowDown";
             break;
         case "KeyD":
-            keycode = "Arrowright";
+            keycode = "ArrowRight";
             break;
     }   
     if(commands.includes(keycode))    
@@ -283,10 +284,11 @@ function cannonKeyDown(KeyboardEvent){
     const commands = ["Digit0","Digit1","Digit2","Digit3","Digit4","Digit5","Digit6","Digit7","Digit8","Digit9"];
     let keycode = KeyboardEvent.code;
     let sendKeyDown = (key) => send2server("keydown", key);
+	if(KeyboardEvent.repeat) return;
     switch(keycode){
         case "Space":
         case "KeyW":
-        case "ArrowUP":
+        case "ArrowUp":
             send2server("shoot", cannon_dir);
             break;
         case "KeyA":

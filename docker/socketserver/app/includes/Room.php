@@ -23,11 +23,13 @@ $PLAYING_FIELD = new Box(200,200,1200,800);
 $EXFIL_AREA = new Box(0,750,1200,750);
 // SPACESHIP 
 $MAX_ENERGY = 20;
-$ACCELERATION = 10;
-$FRICTION = 5;
-$BOOST = 5;
+$ACCELERATION = 1;
+$MAX_VEL = 10;
+$FRICTION = 1.05;
+$BOOST = 7;
 $SHIP_HITBOX = new Box(600,400,40,40);
-$SPACESHIP = new Spaceship($VECTOR, $SHIP_HITBOX, $BULLET, $MAX_ENERGY, 0, 10, $ACCELERATION, $BOOST, $GAME_NULL);
+$ROTATION_VEL = 0.2;
+$SPACESHIP = new Spaceship($VECTOR, $SHIP_HITBOX, $BULLET, $MAX_ENERGY, 0, $ROTATION_VEL, $ACCELERATION, $MAX_VEL, $BOOST, $GAME_NULL);
 // ASTEROID
 $ASTEROID_SIZE = 30; 
 
@@ -100,6 +102,10 @@ class Room {
 
 	public function getClients() : SplObjectStorage {
 		return $this->clients;
+	}
+
+	public function getCaptain() : ConnectionInterface {
+		return $this->captain;
 	}
 
 	public function start() {

@@ -10,9 +10,10 @@ class Spaceship extends Entity{
     protected float $roto_vel;
     protected Vector $current_acceleration;
 	protected float $acceleration;
+	protected float $max_vel;
     protected float $boost;
 
-    public function __construct(Vector $dir, Box $box, Bullet $b, int $e, float $ad, float $av, float $acc, float $boost ,Game $g){
+    public function __construct(Vector $dir, Box $box, Bullet $b, int $e, float $ad, float $av, float $acc, float $maxvel, float $boost ,Game $g){
         parent::__construct($dir,$box, $g);
         $this->max_energy = $e;
         $this->energy = $e;
@@ -21,6 +22,7 @@ class Spaceship extends Entity{
         $this->roto_vel = $av;
         $this->current_acceleration = new Vector(0, 0);
         $this->acceleration = $acc;
+        $this->max_vel = $maxvel;
         $this->boost = $boost;
     }
     function deep_copy():Spaceship{
@@ -61,6 +63,12 @@ class Spaceship extends Entity{
     }
     public function set_acceleration(float $a){
         $this->acceleration = $a;
+    }
+    public function get_max_vel(): float{
+        return $this->max_vel;
+    }
+    public function set_max_vel(float $maxvel){
+        $this->max_vel = $maxvel;
     }
     public function get_current_acceleration(): Vector{
         return $this->current_acceleration;
@@ -118,26 +126,29 @@ class Spaceship extends Entity{
     public function update(): void
     {
 		$this->current_acceleration->sum_alfa($this->roto_dir);
-        $this->velocity->sum_vector($this->current_acceleration);
-        if($this->velocity->get_norm()-$this->game->get_friction() >= 0){
-            $this->velocity->sum_norm(-$this->game->get_friction());
-        } else {
-            $this->velocity->set_norm(0); 
-        }
+        
+		$this->velocity->sum_vector($this->current_acceleration);
+		
+		// $this->velocity->sum_norm(-$this->game->get_friction());
+		if($this->current_acceleration->get_norm() == 0)
+			$this->velocity->set_norm($this->velocity->get_norm()/$this->game->get_friction());
+		
+        if($this->velocity->get_norm() < 0) $this->velocity->set_norm(0);
+		else if($this->velocity->get_norm() > $this->max_vel) $this->velocity->set_norm($this->max_vel);
         parent::update();
     }
 
 	public function rotate_left():void{
-		$this->roto_dir = $this->roto_vel;
+		$this->roto_dir = -$this->roto_vel;
 	}
 	public function rotate_rigth():void{
-		$this->roto_dir = -$this->roto_vel;
+		$this->roto_dir = $this->roto_vel;
 	}
 	public function rotate_stop():void{
 		$this->roto_dir = 0;
 	}
 
-	public function foward():void{
+	public function go_foward():void{
 		$this->current_acceleration->set_norm($this->acceleration);
 	}
 	public function stop():void{

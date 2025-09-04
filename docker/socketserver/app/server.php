@@ -43,14 +43,17 @@ function attach($socket, $username, $list) {
 class MyServer implements MessageComponentInterface {
 	protected array $rooms;
 	protected SplObjectStorage $clients;
+	protected SplObjectStorage $clientsRoom;
 
 	public function __construct() {
 		$this->rooms = [];
 		$this->clients = new SplObjectStorage();
+		$this->clientsRoom = new SplObjectStorage();
 	}
 
 	public function onOpen(ConnectionInterface $conn) {
-
+		$this->clients->attach($conn);
+		$this->clientsRoom->attach($conn);
 	}
 
 	public function onMessage(ConnectionInterface $from, $msg) {
@@ -58,8 +61,7 @@ class MyServer implements MessageComponentInterface {
 		$msg = json_decode($msg);
 		switch ($msg->code) {
 			case "connect":
-				if(isValidUsername($msg->data)) {			
-					$this->clients->attach($from);
+				if(isValidUsername($msg->data)) {
 					$this->clients[$from] = $msg->data;
 				}
 				break;
@@ -71,7 +73,7 @@ class MyServer implements MessageComponentInterface {
 					$this->rooms[$id] = new Room($id, $maxPlayers);
 					$from->send(formatStr("room", $id));
 				} catch (Error $err) {
-					echo $err;
+					echo $err."\n";
 				}
 				break;
 			case "join":
@@ -79,7 +81,9 @@ class MyServer implements MessageComponentInterface {
 				try {
 					$room = $this->rooms[$id];
 					if(!$room->isStarted()) {
-						if(!$room->connect($from, $this->clients[$from])) {
+						if($room->connect($from, $this->clients[$from])) {
+							$this->clientsRoom[$from] = $id;
+						} else {
 							$err = ["name" => "Stanza Piena",
 									"desc" => "La Stanza a cui hai provato a connetterti è già al completo"];
 							$from->send(formatData("error", $err));
@@ -90,24 +94,89 @@ class MyServer implements MessageComponentInterface {
 						$from->send(formatData("error", $err));
 					}
 				} catch (Error $err) {
-					echo $err;
+					echo $err."\n";
 				}
 				break;
 			case "start":
 				$id = $msg->data;
 				if(array_key_exists($id, $this->rooms)) {
 					$room = $this->rooms[$id];
-					if($room->isFull()) {
+					if($room->getCaptain() == $from && $room->isFull()) {
 						echo 'Room:'.$room->id.' Starting'."\n";
 						$room->start();
 					}
 				}
 				break;
 			case "keydown":
+				$id = $this->clientsRoom[$from];
+				if(!isset($this->rooms[$id])) break;
+				$room = $this->rooms[$id];
+				if(!$room->isStarted()) break;
+				$game = $room->getGame();
+				$ship = $game->get_ship();
+
+				// Comunicazioni
+				if(str_starts_with($msg->data, "Digit")) {
+					$digit = ltrim($msg->data, "Digit");
+					try {
+						$digit = intval($digit);
+						if($digit < 10 && $digit >-1) {
+							$game->set_communication($this->clients[$from]["name"], $digit);
+							break;
+						}
+					} catch(Error $err) {
+						echo $err."\n";
+					}
+				}
+
+				// Altri comandi del Capitano
+				if(!$room->getCaptain() == $from) break;
+				switch($msg->data) {
+					case "ArrowUp":
+						$ship->go_foward();
+						break;
+					case "ArrowLeft":
+						$ship->rotate_left();
+						break;
+					case "ArrowRight":
+						$ship->rotate_rigth();
+						break;
+					case "Space":
+						$ship->boost();
+						break;
+				}
 				break;
 			case "keyup":
+				$id = $this->clientsRoom[$from];
+				if(!isset($this->rooms[$id])) break;
+				$room = $this->rooms[$id];
+				if(!$room->isStarted()) break;
+				$game = $room->getGame();
+				$ship = $game->get_ship();
+
+				// Comandi del Capitano
+				if(!$room->getCaptain() == $from) break;
+				switch($msg->data) {
+					case "ArrowUp":
+						$ship->stop();
+						break;
+					case "ArrowLeft":
+					case "ArrowRight":
+						$ship->rotate_stop();
+						break;
+				}
 				break;
 			case "shoot":
+				$id = $this->clientsRoom[$from];
+				if(!isset($this->rooms[$id])) break;
+				$room = $this->rooms[$id];
+				if(!$room->isStarted()) break;
+				if($room->getCaptain() == $from) break;
+				try {
+					$room->getGame()->get_ship()->shoot($msg->data);
+				} catch(Error $err) {
+					echo $err."\n";
+				}
 				break;
 			case "sync":
 				break;
@@ -119,16 +188,19 @@ class MyServer implements MessageComponentInterface {
 
 	public function onClose(ConnectionInterface $conn) {
 		if (!$this->clients->contains($conn)) return;
-		$this->clients->detach($conn);
-		foreach ($this->rooms as $i => $room) {
-			if($room->getClients()->contains($conn)) {
+		if ($this->clientsRoom->contains($conn)) {
+			$id = $this->clientsRoom[$conn];
+			$this->clientsRoom->detach($conn);
+			if(isset($this->rooms[$id])) {
+				$room = $this->rooms[$id];
 				$room->disconnect($conn);
 				if($room->isEmpty()) {
 					$room->stop();
-					unset($this->rooms[$i]);
+					unset($this->rooms[$id]);
 				}
 			}
 		}
+		$this->clients->detach($conn);
 	}
 
 	public function onError(ConnectionInterface $conn, \Exception $e) {
