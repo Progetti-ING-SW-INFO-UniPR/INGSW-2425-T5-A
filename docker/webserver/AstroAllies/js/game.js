@@ -1,6 +1,7 @@
 /*********** GRAFICA ***********/
 let field = document.getElementById("field"); // canvas
 let g = field.getContext("2d"); //context
+let bg_color = "rgb(0,0,21)";
 const ASSETS = {"asteroid":"/src/sprite/asteroid.png",
                 "bullet":"/src/sprite/bullet.png",
                 "corazzata":"/src/sprite/corazzata.png",
@@ -14,10 +15,25 @@ let cannon_vel = 0.1; //rad
 
 loadAsset(ASSETS);
 
-/** 
- * funzione update()
+/**
+ * 
+ * Pulizia canvas e redraw oggetti
+ * @param {object} data = { asteroids: [{x, y, w, h, a}, ...],
+ *                          items: [{x, y, w, h, type}, ...],
+ *                          bullets: [{x, y, w, h}, ...],
+ *                          ship: {x, y, w, h, a},
+ *                          energy: int,
+ *                          maxenergy: int,
+ *                          score: int,
+ *                          comms: {string:int , ...},
+ *                          status: string
+ *                          };    
  */
 function update(data) {
+
+    g.clearRect(0, 0, field.width, field.height);
+    ctx.fillStyle = bg_color;
+
     data.asteroids.forEach(asteroid => {
         drawAsset("asteroid", asteroid.x, asteroid.y, asteroid.w, asteroid.h, asteroid.a);
     });
@@ -88,11 +104,11 @@ function drawAsset(nome, x, y, w, h, a=0){
     const img = imageCache[nome];
     if(!img) return; //immagine non ancora caricata;
 
-    g.save();
+    //g.save();
     g.translate(x+w/2, y+h/2); // riferimento il centro dell'immagine
     g.rotate(a);
     g.drawImage(img, -w/2, -h/2, w, h);
-    g.restore();
+    //g.restore();
 }
 
 /**
@@ -114,14 +130,14 @@ function drawCannon(x, y, w, h, a, color="white", length=60) {
   const xEnd = x + length * Math.cos(a);
   const yEnd = y + length * Math.sin(a);
 
-  g.save();
+  //g.save();
   g.lineWidth = 3; //spessore in pixel 
   g.strokeStyle = color;
   g.beginPath();
   g.moveTo(x, y);       // punto iniziale
   g.lineTo(xEnd, yEnd); // punto finale
   g.stroke();           // disegna la linea
-  g.restore();
+  //g.restore();
 
 }
 
@@ -130,13 +146,13 @@ function drawCannon(x, y, w, h, a, color="white", length=60) {
  * @param {int} score punteggio corrente
  */
 function drawScore(score) { 
-    g.save();
+    //g.save();
     g.font = "30px Arial";
     g.filStyle = "white";
     g.textAlign = "center";
     g.textBaseline = "top";
     g.fillText("Score: " + score, field.width / 2, 10); //10 px di margine
-    g.restore();
+    //g.restore();
 }
 
 /**
@@ -144,13 +160,13 @@ function drawScore(score) {
  * @param {int} energy energia navicella
  */
 function drawEnergy(energy, maxenergy) {
-    g.save();
+    //g.save();
     g.font = "20px Arial";
     g.filStyle = "white";
     g.textAlign = "left";
     g.textBaseline = "bottom";
     g.fillText("Energy: " + energy + "/" + maxenergy, field.height - 10); //10 px di margine
-    g.restore();
+    //g.restore();
 }
 
 /**
@@ -158,7 +174,7 @@ function drawEnergy(energy, maxenergy) {
  * @param {int} type da 1 a 7 default ""
  */
 function drawComms(user, type) {
-    g.save();
+    //g.save();
     g.font = "20px Arial";
     g.filStyle = "white";
     g.textAlign = "right";
@@ -193,12 +209,16 @@ function drawComms(user, type) {
     }
 
     g.fillText(comm + " |" + user, 10 , 10); //10 px di margine
-    g.restore();
+    //g.restore();
 }  
 
 // TODO
 function drawStatus(status){
- // centro grosso
+    g.font = "40px Arial";
+    g.filStyle = "white";
+    g.textAlign = "center";
+    g.textBaseline = "center";
+    g.fillText(status, field.width/2, field.height/2);
 }
 
 /*********** CONTROLLER ***********/
