@@ -223,7 +223,7 @@ class Game {
     public function update(){
 		global $TICKS_PER_POINT;
 		$this->tick++;
-		if($this->tick%$TICKS_PER_POINT == 0) $this->ship->set_energy($this->ship->get_energy()+1);
+		if($this->tick%$TICKS_PER_POINT == 0) $this->ship->gain_energy(1);
         
 		if($this->ship->get_hitbox()->check_overlap($this->exfil_area)){ //navicella esfiltra
             $this->game_win();

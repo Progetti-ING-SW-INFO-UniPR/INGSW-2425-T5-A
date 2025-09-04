@@ -7,8 +7,6 @@ use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
 require_once './includes/Room.php';
 
-
-
 function formatJson($code, $json) {
 	return '{"code":"'.$code.'", "data": '.$json.'}';
 }
@@ -51,6 +49,21 @@ class MyServer implements MessageComponentInterface {
 		$this->clientsRoom = new SplObjectStorage();
 	}
 
+	private static function random_id($length=6) : string {
+		$random = '';
+		for ($i = 0; $i < $length; $i++) {
+			$random .= chr(rand(ord('A'), ord('Z')));
+		}
+		return $random;
+	}
+
+	private function uniq_room_id() : string {
+		$id = $this->random_id();
+		while(isset($this->rooms[$id]))
+			$id = $this->random_id();
+		return $id;
+	}
+
 	public function onOpen(ConnectionInterface $conn) {
 		$this->clients->attach($conn);
 		$this->clientsRoom->attach($conn);
@@ -66,7 +79,7 @@ class MyServer implements MessageComponentInterface {
 				}
 				break;
 			case "create":
-				$id = uniqid();
+				$id = $this->uniq_room_id();
 				try {
 					$maxPlayers = intval($msg->data);
 					if($maxPlayers > 5 || $maxPlayers < 1) break;
