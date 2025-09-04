@@ -50,6 +50,9 @@ class Vector
     public function sum_norm($n) {
         $this->norm += $n;
     }
+    public function sum_alfa($a) {
+        $this->alfa += $a;
+    }
     /*
     public function sum_float($a, $n){
         //stessa di sum_vector ma con le componenti di v

@@ -8,17 +8,17 @@ class Spaceship extends Entity{
     protected Bullet $ammo_type; // creare default bullet.
     protected float $roto_dir;
     protected float $roto_vel;
-    protected float $acceleration; //TODO: Controllare accelerazione e update, non tiene conto della direzione in cui sta accelerando
+    protected Vector $acceleration;
     protected float $boost;
 
-    public function __construct(Vector $dir, Box $box, Bullet $b, int $e, float $ad, float $av, float $a, float $boost ,$g=null){
+    public function __construct(Vector $dir, Box $box, Bullet $b, int $e, float $ad, float $av, float $boost ,$g=null){
         parent::__construct($dir,$box, $g);
         $this->max_energy = $e;
         $this->energy = $e;
         $this->ammo_type = $b; 
         $this->roto_dir = $ad;
         $this->roto_vel = $av;
-        $this->acceleration = $a;
+        $this->acceleration = new Vector(0, 0);
         $this->boost = $boost;
     }
     function deep_copy():Spaceship{
@@ -54,10 +54,10 @@ class Spaceship extends Entity{
     public function set_roto_vel(int $av){
         $this->roto_vel = $av;
     }
-    public function get_acceleration(): float{
+    public function get_acceleration(): Vector{
         return $this->acceleration;
     }
-    public function set_acceleration(float $a){
+    public function set_acceleration(Vector $a){
         $this->acceleration = $a;
     }
     public function __toString():string{
@@ -109,7 +109,8 @@ class Spaceship extends Entity{
      */
     public function update(): void
     {
-        $this->velocity->sum_norm($this->acceleration);
+		$this->acceleration->sum_alfa($this->roto_dir);
+        $this->velocity->sum_vector($this->acceleration);
         if($this->velocity->get_norm()-$this->game->get_friction() >= 0){
             $this->velocity->sum_norm(-$this->game->get_friction());
         } else {
@@ -117,6 +118,16 @@ class Spaceship extends Entity{
         }
         parent::update();
     }
+
+	public function rotate_left():void{
+		$this->roto_dir = $this->roto_vel;
+	}
+	public function rotate_rigth():void{
+		$this->roto_dir = -$this->roto_vel;
+	}
+	public function rotate_stop():void{
+		$this->roto_dir = 0;
+	}
 
     /**
      * Gestisce la reazione alla collisione 
@@ -151,7 +162,7 @@ class Spaceship extends Entity{
 
 	public function get_json():string{
 		return str_replace('}', 
-						   ', "a":'.$this->roto_dir.'}', //TODO: controllare che questo sia l'angolo in qui guarda l'astronave
+						   ', "a":'.$this->acceleration->get_alfa().'}',
 						   $this->hitbox->get_json());
 	}
 
