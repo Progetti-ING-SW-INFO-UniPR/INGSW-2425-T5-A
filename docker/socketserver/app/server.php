@@ -7,6 +7,12 @@ use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
 require_once './includes/Room.php';
 
+
+
+function formatJson($code, $json) {
+	return '{"code":"'.$code.'", "data": '.$json.'}';
+}
+
 function formatData($code, $data) {
 	return '{"code":"'.$code.'", "data": '.json_encode($data).'}';
 }
