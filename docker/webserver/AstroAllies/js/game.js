@@ -1,51 +1,73 @@
 /*********** GRAFICA ***********/
 let field = document.getElementById("field"); // canvas
 let g = field.getContext("2d"); //context
+const ASSETS = {"asteroid":"/src/sprite/asteroid.png",
+                "bullet":"/src/sprite/bullet.png",
+                "corazzata":"/src/sprite/corazzata.png",
+                "incrociatore":"/src/sprite/incrociatore.png",
+                "torpedo":"/src/sprite/torpedo.png",
+                "points":"/src/sprite/points.png",
+                "powerup":"/src/sprite/powerup.png"
+            };
+let cannon_dir = 0;
+let cannon_vel = 0.1; //rad
+
+loadAsset(ASSETS);
 
 /** 
  * funzione update()
- * 
  */
-let data = {
-    asteroids: [
-        {x: 0, y: 0, w: 0, h: 0},
-        {x: 0, y: 0, w: 0, h: 0}
-    ],
-    items: [
-        {x: 0, y: 0, w: 0, h: 0, type: 0},
-        {x: 0, y: 0, w: 0, h: 0, type: 0} //type == 1 -> points.png type > 1 powerup.png
-    ],
-    bulletes: [
-        {x: 0, y: 0, w: 0, h: 0},
-        {x: 0, y: 0, w: 0, h: 0}
-    ],
-    ship: {x: 0, y: 0, w: 0, h: 0, a: 0},
-    energy: 0,
-    maxenergy: 0,
-    points: 0,
-    comms: {
-        "username": 0,
-        "username": 0,
-        "username": 0,
-        "username": 0,
-    },
-	status: "running" //"running", "won", "lost", "pause"
-}
-
 function update(data) {
-	
+    data.asteroids.forEach(asteroid => {
+        drawAsset("asteroid", asteroid.x, asteroid.y, asteroid.w, asteroid.h, asteroid.a);
+    });
+    data.items.forEach(item => {
+        if(item.type < 1);    
+        else if(item.type > 1)
+            drawAsset("powerup", item.x, item.y, item.w, item.h);
+        else if(item.type == 1)
+            drawAsset("points", item.x, item.y, item.w, item.h);
+    });
+    data.bullets.forEach(bullet => {
+        drawAsset("bullet", bullet.x, bullet.y, bullet.w, bullet.h);
+    });
+
+    drawCannon(data.ship.x, data.ship.y, data.ship.w, data.ship.h, );
+    let ship_type = "";
+    switch(maxPlayers){
+        case 2:
+            ship_type = "torpedo";
+            break;
+        case 3:
+            ship_type = "incrociatore";
+            break;
+        case 4:
+            ship_type = "corazzata";
+            break;
+    }
+    drawAsset(ship_type, data.ship.x, data.ship.y, data.ship.w, data.ship.h, data.ship.a);
+    drawEnergy(data.energy, data.maxenergy);
+    drawScore(data.score);
+    for(let name in data.comms){
+        drawComms(name, data.comms[name]);
+    }
+
+    if(data.status != "running"){
+        drawText(data.status); 
+    }
+
 }
 
 let imageCache = {};
 /**
  * Caricamento in cache assets @var imageCache
- * @param {object} assets {"nome": "url", "altronome": "altrourl"} 
+ * @param {object} assets {"nome": "/url", "altronome": "/altrourl"} 
  */
 function loadAssets(assets){
     console.log("Caricamento Assets...");
     for (let nome in assets) {
         const img = new Image();
-        img.src = assets[nome];
+        img.src = window.location.protocol + "//" + window.location.hostname + assets[nome];
         img.onload = () => {
             imageCache[nome] = img;
         };
@@ -62,7 +84,7 @@ function loadAssets(assets){
  * @param {float} a angolo alfa rad della direzione dell'oggetto
  * 
  */
-function drawAsset(nome, x, y, w, h, a){
+function drawAsset(nome, x, y, w, h, a=0){
     const img = imageCache[nome];
     if(!img) return; //immagine non ancora caricata;
 
@@ -135,7 +157,7 @@ function drawEnergy(energy, maxenergy) {
  * Disegna le comunicazioni ricevute
  * @param {int} type da 1 a 7 default ""
  */
-function drawComms(type) {
+function drawComms(user, type) {
     g.save();
     g.font = "20px Arial";
     g.filStyle = "white";
@@ -170,9 +192,14 @@ function drawComms(type) {
             comm = "";
     }
 
-    g.fillText(comm, 10 , 10); //10 px di margine
+    g.fillText(comm + " |" + user, 10 , 10); //10 px di margine
     g.restore();
-}   
+}  
+
+// TODO
+function drawStatus(status){
+ // centro grosso
+}
 
 /*********** CONTROLLER ***********/
 

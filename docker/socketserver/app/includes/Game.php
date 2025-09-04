@@ -362,7 +362,7 @@ class Game {
 		$ret = $ret.'],"ship":'.$this->ship->get_json().','.
 					  '"energy":'.$this->ship->get_energy().','.
 					  '"maxenergy":'.$this->ship->get_max_energy().','.
-					  '"points":'.$this->score.','.
+					  '"score":'.$this->score.','.
 					  '"comms":{';
 		foreach($this->communications as $user => $comm) {
 			$ret = $ret.'"'.$user.'":'.$comm.',';
