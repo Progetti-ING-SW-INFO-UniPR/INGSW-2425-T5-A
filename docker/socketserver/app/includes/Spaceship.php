@@ -15,7 +15,7 @@ class Spaceship extends Entity{
         parent::__construct($dir,$box, $g);
         $this->max_energy = $e;
         $this->energy = $e;
-        $this->ammo_type = $b; 
+        $this->ammo_type = $b->deep_copy(); 
         $this->roto_dir = $ad;
         $this->roto_vel = $av;
         $this->acceleration = new Vector(0, 0);

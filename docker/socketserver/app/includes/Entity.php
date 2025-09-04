@@ -7,12 +7,12 @@ abstract class Entity
 {
     protected Vector $velocity; // vettore velocità angolo=direzione norma=velocità
     protected Box $hitbox;
-    protected ?Game $game; //default null così da creare game 
+    protected Game $game; //default null così da creare game 
 
-    public function __construct(Vector $velocity, Box $hitbox, Game $game = null){
+    public function __construct(Vector $velocity, Box $hitbox, Game $game){
         $this->velocity = $velocity;
         $this->hitbox = $hitbox;
-        $this->game = $game;
+		$this->game = $game;
     }
     public function deep_copy():Entity{
 	    return unserialize(serialize($this));

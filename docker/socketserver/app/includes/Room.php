@@ -84,9 +84,8 @@ class Room {
 		echo 'Room:'.$room->id.' Started'."\n";
 		$this->send(formatStr("start", ""));
 		$this->loop = Loop::addPeriodicTimer(1/20, function () use ($room, $game){
-			echo 'Room:'.$room->id.' Tick:'.$this->tick."\n";
 			$game->update();
-			$json = $game->getJson();
+			$json = $game->get_json();
 			$room->send(formatStr("game", $json));
 			$room->nextTick();
 			if($room->getTick() == 20*5) {

@@ -6,35 +6,38 @@ require_once("Item.php");
 require_once("Asteroid.php");
 require_once("Bullet.php");
 require_once("Spaceship.php");
+require_once("Status.php");
 
 //VECTOR 
-const DEFAULT_VECTOR = new Vector(0,0);
+$DEFAULT_VECTOR = new Vector(0,0);
+//GAME
+$GAME_NULL = Game::null_game();
 //ITEM
-const ITEM_SIZE = 10;
-const DEFAULT_PNT = 15;
+$ITEM_SIZE = 10;
+$DEFAULT_PNT = 15;
 //BULLET
-const DEFAULT_BULLET_VEL = 1;
-const BULLET_SIZE = 4;
-const DEFAULT_BULLET_HITBOX = new Box(600,400,BULLET_SIZE,BULLET_SIZE);
-const DEFAULT_BULLET = new Bullet(DEFAULT_VECTOR,DEFAULT_BULLET_HITBOX, 1);
+$DEFAULT_BULLET_VEL = 1;
+$BULLET_SIZE = 4;
+$DEFAULT_BULLET_HITBOX = new Box(600,400,$BULLET_SIZE,$BULLET_SIZE);
+$DEFAULT_BULLET = new Bullet($DEFAULT_VECTOR,$DEFAULT_BULLET_HITBOX, 1, $GAME_NULL);
 // GAME
-const SPAWNING_FIELD = new Box(0,0,1400,1000);
-const PLAYING_FIELD = new Box(200,200,1200,800);
-const EXFIL_AREA = new Box(0,750,1200,750);
+$SPAWNING_FIELD = new Box(0,0,1400,1000);
+$PLAYING_FIELD = new Box(200,200,1200,800);
+$EXFIL_AREA = new Box(0,750,1200,750);
 // SPACESHIP 
-const DEFAULT_MAX_ENERGY = 20;
-const DEFAULT_ACCELERATION = 10;
-const DEFAULT_FRICTION = 5;
-const DEFAULT_BOOST = 5;
-const SHIP_HITBOX = new Box(600,400,40,40);
-const DEFAULT_SHIP = new Spaceship(DEFAULT_VECTOR,SHIP_HITBOX,DEFAULT_BULLET, DEFAULT_MAX_ENERGY, 0, 10, DEFAULT_ACCELERATION, DEFAULT_BOOST);
+$DEFAULT_MAX_ENERGY = 20;
+$DEFAULT_ACCELERATION = 10;
+$DEFAULT_FRICTION = 5;
+$DEFAULT_BOOST = 5;
+$SHIP_HITBOX = new Box(600,400,40,40);
+$DEFAULT_SHIP = new Spaceship($DEFAULT_VECTOR, $SHIP_HITBOX, $DEFAULT_BULLET, $DEFAULT_MAX_ENERGY, 0, 10, $DEFAULT_ACCELERATION, $DEFAULT_BOOST, $GAME_NULL);
 // ASTEROID
-const ASTEROID_SIZE = 30; 
+$ASTEROID_SIZE = 30; 
 
 // RNG DROP RATE
 //   0           1       2            3          4
 // no drop | punti | upgrade 1 | upgrade 2 | upgrade 3 
-const DROP_RATE = array(5, 70, 15, 5, 5); 
+$DROP_RATE = array(5, 70, 15, 5, 5); 
 /**
  * Estrae un indice randomico usando DROP_RATE come pesi
  * 
@@ -43,22 +46,16 @@ const DROP_RATE = array(5, 70, 15, 5, 5);
  * @see DROP_RATE 
  * @return int indice che identifica il tipo di drop
  */
-function rng_drop() : int{
-    $ratio = DROP_RATE[0];
+function rng_drop() : int {
+	global $DROP_RATE;
+    $ratio = $DROP_RATE[0];
     $treshold = rand(1,100);
     $i = 0;
     while ($ratio < $treshold) {
         ++$i;
-        $ratio += DROP_RATE[$i];
+        $ratio += $DROP_RATE[$i];
     } 
     return $i;
-}
-
-enum Status{
-    case Running;
-    case Won;
-    case Lost;
-    case Pause;
 }
 
 class Game {
@@ -72,19 +69,23 @@ class Game {
     protected $bullets = array();
     protected $asteroids = array(); 
     protected $items = array();
-    protected $friction;
+    protected float $friction;
 	protected $communications = array();
+	protected float $asteroid_size;
 
-    public function __construct(String $id, Box $pf=PLAYING_FIELD, Box $sf=SPAWNING_FIELD, Box $ea=EXFIL_AREA){
+    public function __construct(String $id, ?Box $pf=null, ?Box $sf=null, ?Box $ea=null, ?float $friction=null, ?Spaceship $ship=null, ?float $asteroid_size=null){
         $this->id = $id;
         $this->score = 0;
         $this->status = Status::Running;
-        $this->playing_field = $pf;
-        $this->spawning_field = $sf;
-        $this->exfil_area = $ea;
-        $this->ship = DEFAULT_SHIP->deep_copy();
-        $this->ship->set_game($this);
-        $this->friction = DEFAULT_FRICTION;
+		if($pf) $this->playing_field = $pf;
+        if($sf) $this->spawning_field = $sf;
+        if($ea) $this->exfil_area = $ea;
+        if($ship){
+			$this->ship = $ship;
+        	$this->ship->set_game($this);
+		}
+		if($friction) $this->friction = $friction;
+		if($asteroid_size) $this->asteroid_size= $asteroid_size;
     }
 
     public function get_id():string{
@@ -236,14 +237,14 @@ class Game {
  * Impedisce di generare troppi asteroidi contemporaneamente. 
  */
     public function update(){
-        if($this->ship->get_hitbox()->check_overlap(EXFIL_AREA)){ //navicella esfiltra
+        if($this->ship->get_hitbox()->check_overlap($this->exfil_area)){ //navicella esfiltra
             $this->game_win();
             return;
         }
         $this->ship->update();
         foreach($this->bullets as $b){
             $b->update();
-            if(!$b->get_hitbox()->check_overlap(PLAYING_FIELD)){ //proiettile fuori dal campo di gioco
+            if(!$b->get_hitbox()->check_overlap($this->playing_field)){ //proiettile fuori dal campo di gioco
                 $this->remove($b);
             }
         }
@@ -252,7 +253,7 @@ class Game {
         }
         foreach($this->asteroids as $a){
             $a->update();
-            if(!$a->get_hitbox()->check_overlap(SPAWNING_FIELD)){ //asteroide fuori dal campo o da spawn
+            if(!$a->get_hitbox()->check_overlap($this->spawning_field)){ //asteroide fuori dal campo o da spawn
                 $this->remove($a);
             }
         }
@@ -302,7 +303,7 @@ class Game {
         $norm = rand(1,5);
         $pos = $this->rng_asteroid_spawn();
 
-        $a = new Asteroid(new Vector($pos[2],$norm),new Box($pos[0],$pos[1],ASTEROID_SIZE*$rank,ASTEROID_SIZE*$rank),$rank,$this);
+        $a = new Asteroid(new Vector($pos[2],$norm),new Box($pos[0],$pos[1],$this->asteroid_size*$rank,$this->asteroid_size*$rank),$rank,$this);
         $this->add_asteroid($a);
     }
     /**
@@ -314,33 +315,33 @@ class Game {
      */
     public function rng_asteroid_spawn():array{ 
         //origine fuori dalla schermata di gioco
-        $w = SPAWNING_FIELD->get_width();
-        $h = SPAWNING_FIELD->get_height();
+        $w = $this->spawning_field->get_width();
+        $h = $this->spawning_field->get_height();
         $perimeter = ($w + $h)*2;
         $rand_p = rand(0, $perimeter);
         if($rand_p < $w + $h){
             if($rand_p < $w){
                 $x = $rand_p;
-                $y = rand(0,ASTEROID_SIZE);
+                $y = rand(0,$this->asteroid_size);
             } else{
-                $x = rand($w-ASTEROID_SIZE, $w);
+                $x = rand($w-$this->asteroid_size, $w);
                 $y = $rand_p - $w;
             }
         } else{
             $rand_p -= ($w + $h);
             if($rand_p < $w){
                 $x = $w - $rand_p;
-                $y = rand($h-ASTEROID_SIZE, $h);
+                $y = rand($h-$this->asteroid_size, $h);
             } else {
-                $x = rand(0, ASTEROID_SIZE);
+                $x = rand(0, $this->asteroid_size);
                 $y = $h - ($rand_p - $w);
             }
         }
         //angolo verso il centro approssimativo
-        $wp = PLAYING_FIELD->get_width();
-        $hp =PLAYING_FIELD->get_height();
-        $xp = rand($wp/2 - 2*ASTEROID_SIZE, $wp/2 + 3*ASTEROID_SIZE);
-        $yp = rand($hp/2 - 2*ASTEROID_SIZE, $hp/2 + 3*ASTEROID_SIZE);
+        $wp = $this->playing_field->get_width();
+        $hp = $this->playing_field->get_height();
+        $xp = rand($wp/2 - 2*$this->asteroid_size, $wp/2 + 3*$this->asteroid_size);
+        $yp = rand($hp/2 - 2*$this->asteroid_size, $hp/2 + 3*$this->asteroid_size);
 
         $m = ($y - $yp) / ($x - $xp);
         $alfa = rad2deg(atan($m));
@@ -371,7 +372,7 @@ class Game {
             $this->status = $this->status == Status::Running ? Status::Pause : Status::Running;
     }
 
-	public function getJson() : string {
+	public function get_json() : string {
 		$ret = '{"asteroids":[';
 		foreach($this->asteroids as $ast) {
 			$ret = $ret.$ast->get_hitbox()->get_json().',';
@@ -393,22 +394,30 @@ class Game {
 			$ret = $ret.'"'.$user.'":'.$comm.',';
 		}
 		$ret = $ret.'},"status":"';
-		switch($this->status) {
-			case Status::Running:
-				$ret = $ret.'running';
-				break;
-			case Status::Won:
-				$ret = $ret.'won';
-				break;
-			case Status::Lost:
-				$ret = $ret.'lost';
-				break;
-			case Status::Pause:
-				$ret = $ret.'pause';
-				break;
-		}
+		$ret = $ret.$this->status;
+		// switch($this->status) {
+		// 	case Status::Running:
+		// 		$ret = $ret.'running';
+		// 		break;
+		// 	case Status::Won:
+		// 		$ret = $ret.'won';
+		// 		break;
+		// 	case Status::Lost:
+		// 		$ret = $ret.'lost';
+		// 		break;
+		// 	case Status::Pause:
+		// 		$ret = $ret.'pause';
+		// 		break;
+		// }
 		$ret = $ret.'"}';
 		return $ret;
+	}
+
+	public static function null_game():Game{
+		return new Game("",
+						new Box(0, 0, 0, 0),
+						new Box(0, 0, 0, 0),
+						new Box(0, 0, 0, 0));
 	}
 
 }

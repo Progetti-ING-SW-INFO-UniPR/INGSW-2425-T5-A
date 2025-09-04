@@ -45,7 +45,7 @@ class Vector
         $somma_y = $this->get_dy() + $v->get_dy();
         
         $this->norm = sqrt( $somma_x*$somma_x + $somma_y*$somma_y);
-        $this->alfa = atan( $somma_y/$somma_x);    
+		$this->alfa = atan2($somma_y, $somma_x);
     }
     public function sum_norm($n) {
         $this->norm += $n;
