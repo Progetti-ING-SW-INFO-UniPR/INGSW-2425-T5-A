@@ -8,17 +8,19 @@ class Spaceship extends Entity{
     protected Bullet $ammo_type; // creare default bullet.
     protected float $roto_dir;
     protected float $roto_vel;
-    protected Vector $acceleration;
+    protected Vector $current_acceleration;
+	protected float $acceleration;
     protected float $boost;
 
-    public function __construct(Vector $dir, Box $box, Bullet $b, int $e, float $ad, float $av, float $boost ,Game $g){
+    public function __construct(Vector $dir, Box $box, Bullet $b, int $e, float $ad, float $av, float $acc, float $boost ,Game $g){
         parent::__construct($dir,$box, $g);
         $this->max_energy = $e;
         $this->energy = $e;
         $this->ammo_type = $b->deep_copy(); 
         $this->roto_dir = $ad;
         $this->roto_vel = $av;
-        $this->acceleration = new Vector(0, 0);
+        $this->current_acceleration = new Vector(0, 0);
+        $this->acceleration = $acc;
         $this->boost = $boost;
     }
     function deep_copy():Spaceship{
@@ -54,11 +56,17 @@ class Spaceship extends Entity{
     public function set_roto_vel(int $av){
         $this->roto_vel = $av;
     }
-    public function get_acceleration(): Vector{
+    public function get_acceleration(): float{
         return $this->acceleration;
     }
-    public function set_acceleration(Vector $a){
+    public function set_acceleration(float $a){
         $this->acceleration = $a;
+    }
+    public function get_current_acceleration(): Vector{
+        return $this->current_acceleration;
+    }
+    public function set_current_acceleration(Vector $a){
+        $this->current_acceleration = $a;
     }
     public function __toString():string{
         $e = parent::__toString($this);
@@ -109,8 +117,8 @@ class Spaceship extends Entity{
      */
     public function update(): void
     {
-		$this->acceleration->sum_alfa($this->roto_dir);
-        $this->velocity->sum_vector($this->acceleration);
+		$this->current_acceleration->sum_alfa($this->roto_dir);
+        $this->velocity->sum_vector($this->current_acceleration);
         if($this->velocity->get_norm()-$this->game->get_friction() >= 0){
             $this->velocity->sum_norm(-$this->game->get_friction());
         } else {
@@ -127,6 +135,13 @@ class Spaceship extends Entity{
 	}
 	public function rotate_stop():void{
 		$this->roto_dir = 0;
+	}
+
+	public function foward():void{
+		$this->current_acceleration->set_norm($this->acceleration);
+	}
+	public function stop():void{
+		$this->current_acceleration->set_norm(0);
 	}
 
     /**
@@ -162,7 +177,7 @@ class Spaceship extends Entity{
 
 	public function get_json():string{
 		return str_replace('}', 
-						   ', "a":'.$this->acceleration->get_alfa().'}',
+						   ', "a":'.$this->current_acceleration->get_alfa().'}',
 						   $this->hitbox->get_json());
 	}
 
