@@ -13,10 +13,11 @@ $GAME_NULL = Game::null_game();
 $ITEM_SIZE = 10;
 $POINT = 15;
 //BULLET
-$BULLET_VEL = 1;
-$BULLET_SIZE = 4;
+$BULLET_VEL = 10;
+$BULLET_SIZE = 8;
+$BULLET_VECTOR = new Vector(0, $BULLET_VEL);
 $BULLET_HITBOX = new Box(600,400,$BULLET_SIZE,$BULLET_SIZE);
-$BULLET = new Bullet($VECTOR,$BULLET_HITBOX, 1, $GAME_NULL);
+$BULLET = new Bullet($BULLET_VECTOR,$BULLET_HITBOX, 1, $GAME_NULL);
 // GAME
 $SPAWNING_FIELD = new Box(0,0,1400,1000);
 $PLAYING_FIELD = new Box(200,200,1200,800);
@@ -40,9 +41,7 @@ class Room {
 	private Game $game;
 	private bool $started;
 	private int $maxPlayers;
-	private array $comms;
 	private TimerInterface $loop;
-	private int $tick;
 	
 
 	public function __construct($id, $maxPlayers)
@@ -51,7 +50,6 @@ class Room {
 		$this->started = false;
 		$this->id = $id;
 		$this->maxPlayers = $maxPlayers;
-		$this->tick = 0;
 	}
 
 	public function addClient($socket, $username) {
@@ -109,8 +107,8 @@ class Room {
 	}
 
 	public function start() {
-		global $PLAYING_FIELD, $SPAWNING_FIELD, $EXFIL_AREA, $FRICTION, $SPACESHIP, $ASTEROID_SIZE;
-		$this->game = new Game($this->id, $PLAYING_FIELD->deep_copy(), $SPAWNING_FIELD->deep_copy(), $EXFIL_AREA->deep_copy(), $FRICTION, $SPACESHIP->deep_copy(), $ASTEROID_SIZE);
+		global $PLAYING_FIELD, $SPAWNING_FIELD, $EXFIL_AREA, $FRICTION, $SPACESHIP, $ASTEROID_SIZE, $POINT;
+		$this->game = new Game($this->id, $PLAYING_FIELD->deep_copy(), $SPAWNING_FIELD->deep_copy(), $EXFIL_AREA->deep_copy(), $FRICTION, $SPACESHIP->deep_copy(), $ASTEROID_SIZE, $POINT);
 		$this->started = true;
 		$room = $this;
 		$game = $this->game;
@@ -120,20 +118,11 @@ class Room {
 			$game->update();
 			$json = $game->get_json();
 			$room->send(formatJson("game", $json));
-			$room->nextTick();
-			if($room->getTick() == 30*60) {
-				echo 'Closing room:'.$room->id.' after ~60 seconds'."\n";
-				$room->stop();
-			}
+			// if($room->getGame()->get_tick() == 30*60) {
+			// 	echo 'Closing room:'.$room->id.' after ~60 seconds'."\n";
+			// 	$room->stop();
+			// }
 		});
-	}
-
-	public function getTick() {
-		return $this->tick;
-	}
-
-	public function nextTick() {
-		$this->tick++;
 	}
 
 	public function stop() {

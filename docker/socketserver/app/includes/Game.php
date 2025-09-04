@@ -8,6 +8,8 @@ require_once("Bullet.php");
 require_once("Spaceship.php");
 require_once("Status.php");
 
+
+$TICKS_PER_POINT = 10;
 // RNG DROP RATE
 //   0           1       2            3          4
 // no drop | punti | upgrade 1 | upgrade 2 | upgrade 3 
@@ -46,10 +48,13 @@ class Game {
     protected float $friction;
 	protected $communications = array();
 	protected float $asteroid_size;
+	protected int $default_points;
+	protected int $tick;
 
-    public function __construct(String $id, ?Box $pf=null, ?Box $sf=null, ?Box $ea=null, ?float $friction=null, ?Spaceship $ship=null, ?float $asteroid_size=null){
+    public function __construct(String $id, ?Box $pf=null, ?Box $sf=null, ?Box $ea=null, ?float $friction=null, ?Spaceship $ship=null, ?float $asteroid_size=null, ?int $default_points=null){
         $this->id = $id;
         $this->score = 0;
+		$this->tick = 0;
         $this->status = Status::Running;
 		if($pf) $this->playing_field = $pf;
         if($sf) $this->spawning_field = $sf;
@@ -60,6 +65,7 @@ class Game {
 		}
 		if($friction) $this->friction = $friction;
 		if($asteroid_size) $this->asteroid_size= $asteroid_size;
+		if($default_points) $this->default_points= $default_points;
     }
 
     public function get_id():string{
@@ -111,7 +117,7 @@ class Game {
     public function get_friction(){
         return $this->friction;
     }
-    public function set_friction(int $f){
+    public function set_friction(float $f){
         $this->friction = $f;
     }
 
@@ -139,6 +145,10 @@ class Game {
 	}
 	public function get_communications():array{
 		return $this->communications;
+	}
+
+	public function get_tick():int{
+		return $this->tick;
 	}
 /**
  * Rimuove un oggetto Entity dal corretto array.
@@ -211,7 +221,11 @@ class Game {
  * Impedisce di generare troppi asteroidi contemporaneamente. 
  */
     public function update(){
-        if($this->ship->get_hitbox()->check_overlap($this->exfil_area)){ //navicella esfiltra
+		global $TICKS_PER_POINT;
+		$this->tick++;
+		if($this->tick%$TICKS_PER_POINT == 0) $this->ship->set_energy($this->ship->get_energy()+1);
+        
+		if($this->ship->get_hitbox()->check_overlap($this->exfil_area)){ //navicella esfiltra
             $this->game_win();
             return;
         }
@@ -248,6 +262,7 @@ class Game {
         for($i = 0; $i < $rn; ++$i){
             $this->spawn_asteroid();
         }
+
     }
     /**
      * Crea e aggiunge al relativo array un asteroide.
@@ -277,7 +292,7 @@ class Game {
         $norm = rand(1,5);
         $pos = $this->rng_asteroid_spawn();
 
-        $a = new Asteroid(new Vector($pos[2],$norm),new Box($pos[0],$pos[1],$this->asteroid_size*$rank,$this->asteroid_size*$rank),$rank,$this);
+        $a = new Asteroid(new Vector($pos[2],$norm),new Box($pos[0],$pos[1],$this->asteroid_size*$rank,$this->asteroid_size*$rank),$rank, $this->default_points,$this);
         $this->add_asteroid($a);
     }
     /**
@@ -365,10 +380,11 @@ class Game {
 		foreach($this->bullets as $bullet) {
 			$ret = $ret.$bullet->get_hitbox()->get_json().',';
 		}
+		$ret = rtrim($ret, ",");
 		$ret = $ret.'],"ship":'.$this->ship->get_json().','.
 					  '"energy":'.$this->ship->get_energy().','.
 					  '"maxenergy":'.$this->ship->get_max_energy().','.
-					  '"points":'.$this->score.','.
+					  '"score":'.$this->score.','.
 					  '"comms":{';
 		foreach($this->communications as $user => $comm) {
 			$ret = $ret.'"'.$user.'":'.$comm.',';

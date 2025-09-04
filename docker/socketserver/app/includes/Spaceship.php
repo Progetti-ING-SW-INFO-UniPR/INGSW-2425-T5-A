@@ -40,6 +40,12 @@ class Spaceship extends Entity{
     public function set_energy(int $e){
         $this->energy = $e;
     }
+	public function gain_energy(int $e) {
+		$this->energy+=$e;
+		if($this->energy>$this->max_energy){
+			$this->energy = $this->max_energy;
+		}
+	}
     public function get_ammo(): Bullet{
         return $this->ammo_type;
     }
@@ -84,7 +90,7 @@ class Spaceship extends Entity{
     /**
      * Crea e aggiunge al relativo array un proiettile.
      * 
-     * @param alfa angolo del cannone 
+     * @param alfa angolo del cannone in rad
      * 
      * Se la navicella ha abbastanza energia ne consuma per
      * creare e aggiungere al relativo array un proiettile @see add_bullet().
@@ -92,7 +98,7 @@ class Spaceship extends Entity{
     public function shoot(float $alfa){ //alfa è l'angolo del cannone
         if($this->energy > 0){
             $this->energy -= 1;
-            $dir = new Vector($alfa,$this->ammo_type->get_velocity()->get_norm());
+            $dir = new Vector(rad2deg($alfa),$this->ammo_type->get_velocity()->get_norm());
 
             $offset_x = ($this->hitbox->get_width() - $this->ammo_type->get_hitbox()->get_width())/2; //posizione proiettile centrata alla navicella
             $offset_y = ($this->hitbox->get_height() - $this->ammo_type->get_hitbox()->get_height())/2;
@@ -128,7 +134,7 @@ class Spaceship extends Entity{
 		$this->current_acceleration->sum_alfa($this->roto_dir);
         
 		$this->velocity->sum_vector($this->current_acceleration);
-		
+
 		// $this->velocity->sum_norm(-$this->game->get_friction());
 		if($this->current_acceleration->get_norm() == 0)
 			$this->velocity->set_norm($this->velocity->get_norm()/$this->game->get_friction());

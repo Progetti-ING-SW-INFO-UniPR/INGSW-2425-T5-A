@@ -1,12 +1,16 @@
 <?php 
 require_once("Entity.php");
 
+const ITEM_SIZE = 20;
+
 class Asteroid extends Entity{
     protected int $rank;
+	protected int $points;
 
-    public function __construct(Vector $dir, Box $box, int $rank, Game $g){
+    public function __construct(Vector $dir, Box $box, int $rank, int $points, Game $g){
         parent::__construct($dir,$box,$g);
         $this->rank = $rank;
+		$this->points = $points;
     }
     function deep_copy():Asteroid{
 	    return unserialize(serialize($this));
@@ -34,11 +38,11 @@ class Asteroid extends Entity{
         $type = rng_drop();
         if ($type == 0) return;
 
-        $points = DEFAULT_PNT*pow(2,$this->rank);
+        $points = $this->points*pow(2,$this->rank);
         if ($type > 1)
-            $points = DEFAULT_PNT*$this->rank; 
+            $points = $this->points*$this->rank; 
 
-        $i = new Item($this->velocity,$this->hitbox,$type,$points);
+        $i = new Item($this->velocity,$this->hitbox,$type,$points, $this->game);
         $i->hitbox->set_width(ITEM_SIZE);
         $i->hitbox->set_heigth(ITEM_SIZE);
         $this->game->add_item($i);
@@ -56,8 +60,8 @@ class Asteroid extends Entity{
         $norm = $this->velocity->get_norm();
 
         $nb = new Box($this->hitbox->get_x(),$this->hitbox->get_y(),$this->hitbox->get_width()/2,$this->hitbox->get_height()/2);
-        $first = new Asteroid(new Vector($alfa+30,$norm),clone $nb,$this->rank,$this->game);
-        $second = new Asteroid(new Vector($alfa-30,$norm),clone $nb,$this->rank,$this->game);
+        $first = new Asteroid(new Vector($alfa+30,$norm),clone $nb,$this->rank, $this->points,$this->game);
+        $second = new Asteroid(new Vector($alfa-30,$norm),clone $nb,$this->rank, $this->points,$this->game);
 
         $this->game->remove($this);
         $this->game->add_asteroid($first);

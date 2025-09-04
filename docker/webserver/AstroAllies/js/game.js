@@ -41,6 +41,7 @@ function update(data) {
     data.asteroids.forEach(asteroid => {
         drawAsset("asteroid", asteroid.x, asteroid.y, asteroid.w, asteroid.h, asteroid.a);
     });
+	
     data.items.forEach(item => {
         if(item.type < 1);    
         else if(item.type > 1)
@@ -48,12 +49,11 @@ function update(data) {
         else if(item.type == 1)
             drawAsset("points", item.x, item.y, item.w, item.h);
     });
-    data.bullets.forEach(bullet => {
-        drawAsset("bullet", bullet.x, bullet.y, bullet.w, bullet.h);
-    });
+
 	if(!isCaptain) {
 		drawCannon(data.ship.x, data.ship.y, data.ship.w, data.ship.h, cannon_dir);
 	}
+
     let ship_type = "";
     switch(maxPlayers){
         case 2:
@@ -67,7 +67,12 @@ function update(data) {
             break;
     }
     drawAsset(ship_type, data.ship.x, data.ship.y, data.ship.w, data.ship.h, data.ship.a);
-    drawEnergy(data.energy, data.maxenergy);
+
+    data.bullets.forEach(bullet => {
+        drawAsset("bullet", bullet.x, bullet.y, bullet.w, bullet.h);
+    });
+
+	drawEnergy(data.energy, data.maxenergy);
     drawScore(data.score);
     for(let name in data.comms){
         drawComms(name, data.comms[name]);
