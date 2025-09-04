@@ -4,7 +4,7 @@ require_once("Entity.php");
 class Asteroid extends Entity{
     protected int $rank;
 
-    public function __construct(Vector $dir, Box $box, int $rank, Game $g=null){
+    public function __construct(Vector $dir, Box $box, int $rank, Game $g){
         parent::__construct($dir,$box,$g);
         $this->rank = $rank;
     }
