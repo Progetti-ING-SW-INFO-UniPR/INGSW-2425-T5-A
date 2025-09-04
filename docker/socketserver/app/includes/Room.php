@@ -110,13 +110,13 @@ class Room {
 		$game = $this->game;
 		echo 'Room:'.$room->id.' Started'."\n";
 		$this->send(formatStr("start", ""));
-		$this->loop = Loop::addPeriodicTimer(1/20, function () use ($room, $game){
+		$this->loop = Loop::addPeriodicTimer(1/30, function () use ($room, $game){
 			$game->update();
 			$json = $game->get_json();
 			$room->send(formatJson("game", $json));
 			$room->nextTick();
-			if($room->getTick() == 20*5) {
-				echo 'Closing room:'.$room->id.' after ~5 seconds'."\n";
+			if($room->getTick() == 30*60) {
+				echo 'Closing room:'.$room->id.' after ~60 seconds'."\n";
 				$room->stop();
 			}
 		});

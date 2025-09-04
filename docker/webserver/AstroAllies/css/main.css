@@ -300,7 +300,7 @@
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
     /* background: var(--ast-color); */
-	background-image: url("../src/asteroid.png");
+	background-image: url("../src/sprite/asteroid.png");
 	/* border: solid red; */
 }
 

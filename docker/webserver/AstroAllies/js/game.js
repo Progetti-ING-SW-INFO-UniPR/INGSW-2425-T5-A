@@ -10,13 +10,14 @@ const ASSETS = {"asteroid":"/src/sprite/asteroid.png",
                 "points":"/src/sprite/points.png",
                 "powerup":"/src/sprite/powerup.png"
             };
+let imageCache = {};
 let cannon_dir = 0;
 let cannon_vel = 0.1; //rad
 
 let intRotateLeft;
 let intRotateRight;
 
-loadAsset(ASSETS);
+loadAssets(ASSETS);
 
 /**
  * 
@@ -35,7 +36,7 @@ loadAsset(ASSETS);
 function update(data) {
 
     g.clearRect(0, 0, field.width, field.height);
-    ctx.fillStyle = bg_color;
+    g.fillStyle = bg_color;
 
     data.asteroids.forEach(asteroid => {
         drawAsset("asteroid", asteroid.x, asteroid.y, asteroid.w, asteroid.h, asteroid.a);
@@ -72,12 +73,11 @@ function update(data) {
     }
 
     if(data.status != "running"){
-        drawText(data.status); 
+        drawStatus(data.status); 
     }
 
 }
 
-let imageCache = {};
 /**
  * Caricamento in cache assets @var imageCache
  * @param {object} assets {"nome": "/url", "altronome": "/altrourl"} 
@@ -86,7 +86,8 @@ function loadAssets(assets){
     console.log("Caricamento Assets...");
     for (let nome in assets) {
         const img = new Image();
-        img.src = window.location.protocol + "//" + window.location.hostname + assets[nome];
+        // img.src = window.location.protocol + "//" + window.location.hostname + assets[nome];
+        img.src = ".." + assets[nome];
         img.onload = () => {
             imageCache[nome] = img;
         };
@@ -108,9 +109,11 @@ function drawAsset(nome, x, y, w, h, a=0){
     if(!img) return; //immagine non ancora caricata;
 
     g.save();
+    g.save();
     g.translate(x+w/2, y+h/2); // riferimento il centro dell'immagine
     g.rotate(a);
     g.drawImage(img, -w/2, -h/2, w, h);
+    g.restore();
     g.restore();
 }
 
@@ -151,8 +154,8 @@ function drawCannon(x, y, w, h, a, color="white", length=60) {
 function drawScore(score) { 
     g.save();
     g.font = "30px Arial";
-    g.filStyle = "white";
-    g.textAlign = "center";
+    g.fillStyle = "white";
+    g.textAlign = "middle";
     g.textBaseline = "top";
     g.fillText("Score: " + score, field.width / 2, 10); //10 px di margine
     g.restore();
@@ -165,7 +168,7 @@ function drawScore(score) {
 function drawEnergy(energy, maxenergy) {
     g.save();
     g.font = "20px Arial";
-    g.filStyle = "white";
+    g.fillStyle = "white";
     g.textAlign = "left";
     g.textBaseline = "bottom";
     g.fillText("Energy: " + energy + "/" + maxenergy, field.height - 10); //10 px di margine
@@ -179,7 +182,7 @@ function drawEnergy(energy, maxenergy) {
 function drawComms(user, type) {
     g.save();
     g.font = "20px Arial";
-    g.filStyle = "white";
+    g.fillStyle = "white";
     g.textAlign = "right";
     g.textBaseline = "top";
 
@@ -219,9 +222,9 @@ function drawComms(user, type) {
 // TODO
 function drawStatus(status){
     g.font = "40px Arial";
-    g.filStyle = "white";
+    g.fillStyle = "white";
     g.textAlign = "center";
-    g.textBaseline = "center";
+    g.textBaseline = "middle";
     g.fillText(status, field.width/2, field.height/2);
 }
 

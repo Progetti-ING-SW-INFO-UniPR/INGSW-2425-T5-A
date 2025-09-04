@@ -124,6 +124,7 @@ class MyServer implements MessageComponentInterface {
 			if($room->getClients()->contains($conn)) {
 				$room->disconnect($conn);
 				if($room->isEmpty()) {
+					$room->stop();
 					unset($this->rooms[$i]);
 				}
 			}
