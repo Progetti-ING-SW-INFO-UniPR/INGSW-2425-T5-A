@@ -289,6 +289,7 @@ class Game {
      */
     public function rng_asteroid_spawn():array{ 
         //origine fuori dalla schermata di gioco
+		$spread = 10;
         $w = $this->spawning_field->get_width();
         $h = $this->spawning_field->get_height();
         $perimeter = ($w + $h)*2;
@@ -314,11 +315,14 @@ class Game {
         //angolo verso il centro approssimativo
         $wp = $this->playing_field->get_width();
         $hp = $this->playing_field->get_height();
-        $xp = rand($wp/2 - 2*$this->asteroid_size, $wp/2 + 3*$this->asteroid_size);
-        $yp = rand($hp/2 - 2*$this->asteroid_size, $hp/2 + 3*$this->asteroid_size);
+        $xp = rand($wp/2 - $spread*$this->asteroid_size, $wp/2 + $spread*$this->asteroid_size);
+        $yp = rand($hp/2 - $spread*$this->asteroid_size, $hp/2 + $spread*$this->asteroid_size);
 
-        $m = ($y - $yp) / ($x - $xp);
-        $alfa = rad2deg(atan($m));
+        // $m = ($y - $yp) / ($x - $xp);
+        // $alfa = rad2deg(atan($m));
+		// echo "atan: ".atan($m)." atan2: ".atan2(($x - $xp), ($y - $yp))."\n";
+        $m = atan2(($y - $yp), ($x - $xp))+pi();
+        $alfa = rad2deg($m);
 
         return array($x,$y,$alfa);
     }
@@ -364,7 +368,7 @@ class Game {
 		$ret = $ret.'],"ship":'.$this->ship->get_json().','.
 					  '"energy":'.$this->ship->get_energy().','.
 					  '"maxenergy":'.$this->ship->get_max_energy().','.
-					  '"score":'.$this->score.','.
+					  '"points":'.$this->score.','.
 					  '"comms":{';
 		foreach($this->communications as $user => $comm) {
 			$ret = $ret.'"'.$user.'":'.$comm.',';

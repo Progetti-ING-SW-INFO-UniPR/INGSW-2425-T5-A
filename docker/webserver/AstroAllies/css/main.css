@@ -5,10 +5,12 @@
 	--ast-delay: -10s;
 	--fg: rgb(255, 255, 255);
 	--fg4: rgb(255, 230, 230);
+	--fg5: rgb(230, 255, 233);
 	--bg: rgb(0, 0, 21);
 	--bg2: #000000e4;
 	--bg3: #0000005a;
 	--bg4: rgb(80, 0, 21);
+	--bg5: rgb(0, 80, 15);
 	font-size: 1.4vmin;
 	background-color: var(--bg);
 	font-family: 'Comfortaa';
@@ -230,6 +232,12 @@
 	color: var(--fg4);
 	border-color: var(--fg4);
 }
+
+.alert.green {
+	background-color: var(--bg5);
+	color: var(--fg5);
+	border-color: var(--fg5);
+}
 /************************* GRID *************************/
 
 .grid {
@@ -301,6 +309,7 @@
 	animation-timing-function: linear;
     /* background: var(--ast-color); */
 	background-image: url("../src/sprite/asteroid.png");
+	background-size: cover;
 	/* border: solid red; */
 }
 

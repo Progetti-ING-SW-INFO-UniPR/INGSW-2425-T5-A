@@ -12,7 +12,7 @@ const ASSETS = {"asteroid":"/src/sprite/asteroid.png",
             };
 let imageCache = {};
 let cannon_dir = 0;
-let cannon_vel = 0.1; //rad
+let cannon_vel = 0.2; //rad
 
 let intRotateLeft;
 let intRotateRight;
@@ -51,8 +51,9 @@ function update(data) {
     data.bullets.forEach(bullet => {
         drawAsset("bullet", bullet.x, bullet.y, bullet.w, bullet.h);
     });
-
-    drawCannon(data.ship.x, data.ship.y, data.ship.w, data.ship.h, );
+	if(!isCaptain) {
+		drawCannon(data.ship.x, data.ship.y, data.ship.w, data.ship.h, cannon_dir);
+	}
     let ship_type = "";
     switch(maxPlayers){
         case 2:
@@ -127,7 +128,7 @@ function drawAsset(nome, x, y, w, h, a=0){
  * 
  * default lengh = 60 per non essere nascosta dalla navicella (75)
  */
-function drawCannon(x, y, w, h, a, color="white", length=60) { 
+function drawCannon(x, y, w, h, a, color="white", length=40) {
 
   x = x+w/2;
   y = y+h/2;
@@ -136,10 +137,10 @@ function drawCannon(x, y, w, h, a, color="white", length=60) {
 
   //g.save();
   g.lineWidth = 3; //spessore in pixel 
-  g.strokeStyle = color;
   g.beginPath();
   g.moveTo(x, y);       // punto iniziale
   g.lineTo(xEnd, yEnd); // punto finale
+  g.strokeStyle = color;
   g.stroke();           // disegna la linea
   //g.restore();
 
@@ -248,7 +249,7 @@ function captainKeyDown(KeyboardEvent){
             keycode = "Arrowright";
             break;
     }   
-    if(commands.findIndex(keycode) > -1)    
+    if(commands.includes(keycode))
         sendKeyDown(keycode);
  }
 
@@ -271,7 +272,7 @@ function captainKeyUp(KeyboardEvent){
             keycode = "Arrowright";
             break;
     }   
-    if(commands.findIndex(keycode) > -1)    
+    if(commands.includes(keycode))    
         sendKeyUp(keycode);
  }
 
@@ -283,40 +284,52 @@ function cannonKeyDown(KeyboardEvent){
         case "Space":
         case "KeyW":
         case "ArrowUP":
-            send2server("shoot", a);send2server();
+            send2server("shoot", cannon_dir);
             break;
         case "KeyA":
         case "ArrowLeft":
-            intRotateLeft = setInterval(rotateCannonLeft,100);
+			if(!intRotateLeft)
+            	intRotateLeft = setInterval(rotateCannonLeft,1000/30);
             break;
         case "KeyD":
         case "ArrowRight":
-            intRotateRight = setInterval(rotateCannonRight,100);
+			if(!intRotateRight)
+            	intRotateRight = setInterval(rotateCannonRight,1000/30);
             break;
     } 
-    if(commands.findIndex(keycode) > -1)    
+    if(commands.includes(keycode))    
         sendKeyDown(keycode);
  }
 
 function rotateCannonLeft(){
-    cannon_dir += cannon_vel;
- }
- function rotateCannonRight(){
     cannon_dir -= cannon_vel;
- }
+}
+function rotateCannonRight(){
+    cannon_dir += cannon_vel;
+}
 
- function cannonKeyUp(KeyboardEvent){
+function cannonKeyUp(KeyboardEvent){
     let keycode = KeyboardEvent.code;
     switch(keycode){
         case "KeyA":
         case "ArrowLeft":
             clearInterval(intRotateLeft);
+			intRotateLeft = null;
             break;
-        case "KeyD":
-        case "ArrowRight":
-            clearInterval(intRotateRight);
-            break;
+		case "KeyD":
+		case "ArrowRight":
+			clearInterval(intRotateRight);
+			intRotateRight = null;
+		break;
     } 
- }
+}
 
-
+function bindCommands() {
+	if(isCaptain) {
+		document.onkeydown = captainKeyDown;
+		document.onkeyup = captainKeyUp;
+	} else {
+		document.onkeydown = cannonKeyDown;
+		document.onkeyup = cannonKeyUp;
+	}
+}

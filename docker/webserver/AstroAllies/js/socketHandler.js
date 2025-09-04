@@ -4,6 +4,8 @@ let websocket = new WebSocket("ws://"+window.location.hostname+":8000/");
 
 let username = document.getElementById("username").value;
 
+let captainUsername = "";
+
 /**
  * Invia un messaggio tramite socket al server.
  * @param {string} code tipo di messaggio
@@ -51,12 +53,17 @@ websocket.onmessage = (ev) => {
 			disconnect(msg.data);
 			break;
 		case "captain":
-			if(msg.data == username)
+			captainUsername = msg.data;
+			if(msg.data == username) {
 				isCaptain = true;
+				bindCommands();
+				newAlert("Capitano!", "Ora sei tu a pilotare la nave!", 3,  "green");
+			}
 			break;
 		case "start":
 			document.getElementById("room").hidden = true;
 			document.getElementById("game").hidden = false;
+			bindCommands();
 			break;
 		case "game":
 			update(msg.data);

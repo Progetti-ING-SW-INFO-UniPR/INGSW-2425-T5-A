@@ -49,7 +49,7 @@ function newAlert(name, desc, time=5, ...classes) {
 		setTimeout(() => {
 			al.classList.remove("al-show");
 			setTimeout(() => {
-				document.removeChild(al);
+				document.body.removeChild(al);
 			}, 1000);
 		}, time*1000);
 	},1)

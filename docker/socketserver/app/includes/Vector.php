@@ -4,8 +4,8 @@ class Vector
     protected float $alfa; //radianti
     protected float $norm;
 
-    public function __construct(float $alfa, float $norm){
-        $this->alfa = deg2rad($alfa); //input in gradi convertito in radianti 
+    public function __construct(float $deg, float $norm){
+        $this->alfa = deg2rad($deg); //input in gradi convertito in radianti 
         $this->norm = $norm;
     }
     function deep_copy():Vector{
@@ -45,7 +45,7 @@ class Vector
         $somma_y = $this->get_dy() + $v->get_dy();
         
         $this->norm = sqrt( $somma_x*$somma_x + $somma_y*$somma_y);
-		$this->alfa = atan2($somma_y, $somma_x);
+		$this->alfa = atan2($somma_y, $somma_x); // TODO: CONTROLLARE SE NECESSARIO AGGIUNGERE PI
     }
     public function sum_norm($n) {
         $this->norm += $n;
