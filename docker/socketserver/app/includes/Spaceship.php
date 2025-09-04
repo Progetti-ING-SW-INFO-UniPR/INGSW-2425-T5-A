@@ -11,7 +11,7 @@ class Spaceship extends Entity{
     protected Vector $acceleration;
     protected float $boost;
 
-    public function __construct(Vector $dir, Box $box, Bullet $b, int $e, float $ad, float $av, float $boost ,$g=null){
+    public function __construct(Vector $dir, Box $box, Bullet $b, int $e, float $ad, float $av, float $boost ,Game $g){
         parent::__construct($dir,$box, $g);
         $this->max_energy = $e;
         $this->energy = $e;
