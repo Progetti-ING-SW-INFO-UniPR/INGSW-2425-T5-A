@@ -48,8 +48,8 @@ require_once __DIR__ . "/./../includes/credentialChecks.php";
 			<div class="element"><input type="password" name="confirm" id="confirm" /></div>
 		</div>
 		<div class="row">
-			<div class="element clickable"><button class="btn" id="reg">Registrati</button></div>
 			<div class="element clickable"><a href="/pages/login.php" class="btn">Accedi</a></div>
+			<div class="element clickable"><button class="btn" id="reg">Registrati</button></div>
 		</div>
 		<input type="submit" id="regSubmit" hidden>
 	</form>
