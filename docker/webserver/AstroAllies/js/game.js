@@ -8,7 +8,9 @@ const ASSETS = {"asteroid":"/src/sprite/asteroid.png",
                 "incrociatore":"/src/sprite/incrociatore.png",
                 "torpedo":"/src/sprite/torpedo.png",
                 "points":"/src/sprite/points.png",
-                "powerup":"/src/sprite/powerup.png"
+                "powerup_vel":"/src/sprite/powerup_blue.png",
+                "powerup_rank":"/src/sprite/powerup_red.png",
+                "powerup_size":"/serc/sprite/powerup_green.png"
             };
 let imageCache = {};
 let cannon_dir = 0;
@@ -44,10 +46,14 @@ function update(data) {
 	
     data.items.forEach(item => {
         if(item.type < 1);    
-        else if(item.type > 1)
-            drawAsset("powerup", item.x, item.y, item.w, item.h);
         else if(item.type == 1)
             drawAsset("points", item.x, item.y, item.w, item.h);
+        else if(item.type == 2)
+            drawAsset("powerup_blue", item.x, item.y, item.w, item.h);
+        else if(item.type == 3)
+            drawAsset("powerup_red", item.x, item.y, item.w, item.h);
+        else if(item.type == 4)
+            drawAsset("powerup_green", item.x, item.y, item.w, item.h);
     });
 
 	if(!isCaptain) {
