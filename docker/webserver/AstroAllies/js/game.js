@@ -74,8 +74,10 @@ function update(data) {
 
 	drawEnergy(data.energy, data.maxenergy);
     drawScore(data.score);
+	let i = 0;
     for(let name in data.comms){
-        drawComms(name, data.comms[name]);
+        drawComms(name, data.comms[name], i);
+		i++;
     }
 
     if(data.status != "running"){
@@ -185,10 +187,9 @@ function drawEnergy(energy, maxenergy) {
  * Disegna le comunicazioni ricevute
  * @param {int} type da 1 a 7 default ""
  */
-function drawComms(user, type) {
+function drawComms(user, type, pos) {
     g.save();
     g.font = "20px Arial";
-    g.fillStyle = "white";
     g.textAlign = "right";
     g.textBaseline = "top";
 
@@ -219,9 +220,15 @@ function drawComms(user, type) {
         default:
             comm = "";
     }
+	g.fillStyle = "green";
+	let txt = " | " + user;
+	let x = field.width - 10;
+    g.fillText(comm, x - g.measureText(txt).width , 25*pos+10); //10 px di margine
     if(captainUsername == user)
-        g.fillStyle("yellow");
-    g.fillText(comm + " |" + user, 10 , 10); //10 px di margine
+		g.fillStyle = "yellow";
+	else
+		g.fillStyle = "white";
+    g.fillText(txt, x , 25*pos+10); //10 px di margine
     g.restore();
 }  
 
