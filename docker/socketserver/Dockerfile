@@ -5,10 +5,14 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY ./entrypoint.sh /entrypoint.sh
 
+RUN chmod +x /entrypoint.sh \
+    && apk add --no-cache dos2unix \
+    && dos2unix /entrypoint.sh
+
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 ENTRYPOINT /entrypoint.sh
 
 EXPOSE 8000
 
-CMD [ "php", "./app/server.php"]
+CMD ["php", "./app/server.php"]
