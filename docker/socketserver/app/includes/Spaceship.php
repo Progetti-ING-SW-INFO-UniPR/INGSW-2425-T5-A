@@ -180,15 +180,21 @@ class Spaceship extends Entity{
         else if(is_a($e, 'Item')){
             switch($e->get_type()){
                 case 2: // bullet vel upgrade
+                    echo "B4 vel: {$this->ammo_type->get_velocity()}\n";
                     $this->ammo_type->get_velocity()->sum_norm(5);
+                    echo "AFTER vel: {$this->ammo_type->get_velocity()}\n";
                     break;
                 case 3: // bullet rank upgrade
-                    if($this->ammo_type->get_rank() < 3)
+                    if($this->ammo_type->get_rank() < 3){
+                        echo "AFTER vel: {$this->ammo_type->get_velocity()}\n";
                         $this->ammo_type->set_rank($this->ammo_type->get_rank()+1);
+                        echo "AFTER vel: {$this->ammo_type->get_velocity()}\n";}
                     break;
                 case 4: // bullet size upgrade
-                    if($this->ammo_type->get_hitbox()->get_width()+5 < $this->hitbox->get_width())
+                    if($this->ammo_type->get_hitbox()->get_width()+10 < $this->hitbox->get_width()){
+                        echo "AFTER vel: {$this->ammo_type->get_velocity()}\n";
                         $this->ammo_type->set_hitbox_comps(0,0,$this->ammo_type->get_hitbox()->get_width()+5,$this->ammo_type->get_hitbox()->get_height()+5);
+                        echo "AFTER vel: {$this->ammo_type->get_velocity()}\n";}
                     break;
                 default: // non fa nulla
                     break;
