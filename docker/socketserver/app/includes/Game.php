@@ -276,11 +276,11 @@ class Game {
      * Crea e @see add_asteroid() aggiunge all'array relativo l'asteroide creato.
      */
     public function spawn_asteroid(){
-        $min=0;
-        $max=0;
+        $min=1;
+        $max=2;
         if($this->score == 0){ //init
             $min = 1;
-            $min = 2;
+            $max = 2;
         }
         else if($this->score <= 1000){ //mid game
             $min = 1;
@@ -290,7 +290,7 @@ class Game {
             $min = $this->score/1000 + 1;
             $max = $min + 3;
         }
-
+		echo "$min : $max : $this->score\n";
         $rank = rand($min,$max);
         $norm = rand(1,5);
         $pos = $this->rng_asteroid_spawn();

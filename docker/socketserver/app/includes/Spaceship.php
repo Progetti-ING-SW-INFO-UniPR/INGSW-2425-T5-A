@@ -172,8 +172,11 @@ class Spaceship extends Entity{
      */
     public function on_collision(Entity $e)
     {
-        if(is_a($e, 'Asteroid'))
+        if(is_a($e, 'Asteroid')) {
+			echo "Ship: {$this->game->get_ship()->get_hitbox()->get_json()}\n";
+			echo "Asteroid: {$e->get_hitbox()->get_json()}\n";
             $this->game->game_over();
+		}
         else if(is_a($e, 'Item')){
             switch($e->get_type()){
                 case 2: // bullet vel upgrade

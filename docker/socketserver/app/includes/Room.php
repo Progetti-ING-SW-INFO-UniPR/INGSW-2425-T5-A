@@ -18,10 +18,6 @@ $BULLET_SIZE = 8;
 $BULLET_VECTOR = new Vector(0, $BULLET_VEL);
 $BULLET_HITBOX = new Box(600,400,$BULLET_SIZE,$BULLET_SIZE);
 $BULLET = new Bullet($BULLET_VECTOR,$BULLET_HITBOX, 1, $GAME_NULL);
-// GAME
-$SPAWNING_FIELD = new Box(-100,-100,1400,1000);
-$PLAYING_FIELD = new Box(0,0,1200,800);
-$EXFIL_AREA = new Box(0,800,1200,100);
 // SPACESHIP 
 $MAX_ENERGY = 20;
 $ACCELERATION = 0.75;
@@ -33,6 +29,10 @@ $ROTATION_VEL = 0.2;
 $SPACESHIP = new Spaceship($VECTOR, $SHIP_HITBOX, $BULLET, $MAX_ENERGY, 0, $ROTATION_VEL, $ACCELERATION, $MAX_VEL, $BOOST, $GAME_NULL);
 // ASTEROID
 $ASTEROID_SIZE = 30; 
+// GAME
+$SPAWNING_FIELD = new Box(-100,-100,1400,1000);
+$PLAYING_FIELD = new Box(0,0,1200,800);
+$EXFIL_AREA = new Box(0,800+$SHIP_HITBOX->get_height(),1200,100);
 
 class Room {
 	public readonly string $id;
@@ -112,6 +112,8 @@ class Room {
 		$this->started = true;
 		$room = $this;
 		$game = $this->game;
+		foreach ($this->clients as $sock)
+			$this->game->set_communication($this->clients[$sock], 0);
 		echo 'Room:'.$room->id.' Started'."\n";
 		$this->send(formatStr("start", ""));
 		$this->loop = Loop::addPeriodicTimer(1/30, function () use ($room, $game){
@@ -127,6 +129,7 @@ class Room {
 
 	public function stop() {
 		Loop::cancelTimer($this->loop);
+		echo 'Room:'.$this->id.' Stopped'."\n";
 	}
 
 	public function isStarted() {

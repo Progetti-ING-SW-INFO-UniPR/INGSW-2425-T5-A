@@ -134,7 +134,7 @@ class MyServer implements MessageComponentInterface {
 					try {
 						$digit = intval($digit);
 						if($digit < 10 && $digit >-1) {
-							$game->set_communication($this->clients[$from]["name"], $digit);
+							$game->set_communication($this->clients[$from], $digit);
 							break;
 						}
 					} catch(Error $err) {
