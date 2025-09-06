@@ -37,13 +37,13 @@ if (!isset($_SESSION["USERNAME"])) {
 		echo '<input id="username" type="text" value="'.$_SESSION["USERNAME"].'" hidden>';
 		?>
 		<div class="menu nosel">
-			<div class="subtitle">Stanza " <div id="code">Test</div> " <div class="copy clickable" onclick="copy('code');"></div></div>
+			<div class="subtitle">Stanza "<div id="code">...</div>" <div class="copy clickable" onclick="copy('code');"></div></div>
 			<div class="element">Equipaggio:</div>
 			<div class="grid" id="players">
-				<div class="grid-el">
+				<!-- <div class="grid-el">
 					<div class="el-title" id="player0">Nome Utente</div>
 					<div class="el-name">Capitano</div>
-				</div>
+				</div> -->
 			</div>
 			<div class="row">
 				<div class="element clickable"><button class="btn" onclick="cancel();">Annulla</button></div>

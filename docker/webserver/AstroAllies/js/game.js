@@ -10,7 +10,7 @@ const ASSETS = {"asteroid":"/src/sprite/asteroid.png",
                 "points":"/src/sprite/points.png",
                 "powerup_vel":"/src/sprite/powerup_blue.png",
                 "powerup_rank":"/src/sprite/powerup_red.png",
-                "powerup_size":"/serc/sprite/powerup_green.png"
+                "powerup_size":"/src/sprite/powerup_green.png"
             };
 let imageCache = {};
 let cannon_dir = 0;

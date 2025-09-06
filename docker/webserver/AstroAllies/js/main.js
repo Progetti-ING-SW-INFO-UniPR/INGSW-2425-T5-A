@@ -44,14 +44,22 @@ function newAlert(name, desc, time=5, ...classes) {
 		al.classList.add(c);
 	}
 	document.body.appendChild(al);
+	
+	let to;
+	
+	let remove = () => {
+		clearTimeout(to);
+		al.classList.remove("al-show");
+		setTimeout(() => {
+			document.body.removeChild(al);
+		}, 1000);
+	}
+	
+	al.onclick = remove;
+
 	setTimeout(() => {
 		al.classList.add("al-show");
-		setTimeout(() => {
-			al.classList.remove("al-show");
-			setTimeout(() => {
-				document.body.removeChild(al);
-			}, 1000);
-		}, time*1000);
+		to = setTimeout(remove, time*1000);
 	},1)
 }
 
