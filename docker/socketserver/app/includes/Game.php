@@ -250,21 +250,28 @@ class Game {
         }
         $this->check_collisions();
         
-        //spawn asteroidi in base alla fase di gioco
-        if($this->score <= 1000){ //mid game
-            $min = 2;
-            $max = 5;
-        }
-        else if($this->score > 1000){ // end game
-            $min = 4;
-            $max = 8;
-        }
-        $rn = rand($min,$max);
-        if(sizeof($this->asteroids) + $rn > 20);
-            $rn = 20 - sizeof($this->asteroids);
-        for($i = 0; $i < $rn; ++$i){
-            $this->spawn_asteroid();
-        }
+
+		if($this->tick % 40) {
+			//spawn asteroidi in base alla fase di gioco
+			$max_ast = 12;
+			$min = 0;
+			$min = 2;
+			if($this->score <= 1000){ //mid game
+				$min = 2;
+				$max = 5;
+			}
+			else if($this->score > 1000){ // end game
+				$min = 4;
+				$max = 8;
+			}
+	
+			$rn = rand($min,$max);
+			if(sizeof($this->asteroids) + $rn > $max_ast);
+				$rn = $max_ast - sizeof($this->asteroids);
+			for($i = 0; $i < $rn; ++$i){
+				$this->spawn_asteroid();
+			}
+		}
 
     }
     /**

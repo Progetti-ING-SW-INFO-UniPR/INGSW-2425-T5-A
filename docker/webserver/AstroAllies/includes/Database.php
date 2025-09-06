@@ -72,7 +72,7 @@ class DBResult{
 	/**
      * @return array|null|false
      */
-	public function fetch_row() : array {
+	public function fetch_row() {
 		$row = $this->mysqli->fetch_row();
 		if($row == null or $row == false) return $row;
 		return array_combine($this->fields, $row);

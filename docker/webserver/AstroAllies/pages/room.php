@@ -53,6 +53,7 @@ if (!isset($_SESSION["USERNAME"])) {
 	</div>
 	<div id="game" hidden>
 		<div class="bg"></div>
+		<a class="home box top-left clickable" href="/pages/index.php"></a>
 		<div class="game">
 			<canvas id="field" width="1200" height="800"></canvas>
 		</div>
