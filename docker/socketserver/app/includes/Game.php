@@ -297,7 +297,6 @@ class Game {
             $min = $this->score/1000 + 1;
             $max = $min + 3;
         }
-		echo "$min : $max : $this->score\n";
         $rank = rand($min,$max);
         $norm = rand(1,5);
         $pos = $this->rng_asteroid_spawn();
@@ -345,9 +344,6 @@ class Game {
         $xp = rand($wp/2 - $spread*$this->asteroid_size, $wp/2 + $spread*$this->asteroid_size);
         $yp = rand($hp/2 - $spread*$this->asteroid_size, $hp/2 + $spread*$this->asteroid_size);
 
-        // $m = ($y - $yp) / ($x - $xp);
-        // $alfa = rad2deg(atan($m));
-		// echo "atan: ".atan($m)." atan2: ".atan2(($x - $xp), ($y - $yp))."\n";
         $m = atan2(($y - $yp), ($x - $xp))+pi();
         $alfa = rad2deg($m);
 

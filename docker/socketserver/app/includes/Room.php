@@ -74,6 +74,8 @@ class Room {
 		$this->send(formatStr("connected", $username));
 		$socket->send(formatStr("captain", $this->clients[$this->captain]));
 		$socket->send(formatData("maxplayers", $this->maxPlayers));
+		
+		echo "Room\t| $this->id | $username connected, {$this->clients->count()} inside\n";
 		return true;
 	}
 
@@ -81,13 +83,14 @@ class Room {
 		$username = $this->clients[$socket];
 		$this->clients->detach($socket);
 		$this->send(formatStr("disconnected", $username));
-		if($this->captain == $socket) {
+		if($this->captain == $socket && $this->clients->count() > 0) {
 			foreach($this->clients as $client) {
 				$this->captain = $client;
 				break;
 			}
 			$this->send(formatStr("captain", $this->clients[$this->captain]));
 		}
+		echo "Room\t| $this->id | $username disconnected, {$this->clients->count()} remaining\n";
 	}
 
 	public function setGame($game) {
@@ -114,22 +117,18 @@ class Room {
 		$game = $this->game;
 		foreach ($this->clients as $sock)
 			$this->game->set_communication($this->clients[$sock], 0);
-		echo 'Room:'.$room->id.' Started'."\n";
+		echo "Room\t| $room->id | Started\n";
 		$this->send(formatStr("start", ""));
 		$this->loop = Loop::addPeriodicTimer(1/30, function () use ($room, $game){
 			$game->update();
 			$json = $game->get_json();
 			$room->send(formatJson("game", $json));
-			// if($room->getGame()->get_tick() == 30*60) {
-			// 	echo 'Closing room:'.$room->id.' after ~60 seconds'."\n";
-			// 	$room->stop();
-			// }
 		});
 	}
 
 	public function stop() {
 		Loop::cancelTimer($this->loop);
-		echo 'Room:'.$this->id.' Stopped'."\n";
+		echo "Room\t| $this->id | Stopped\n";
 	}
 
 	public function isStarted() {

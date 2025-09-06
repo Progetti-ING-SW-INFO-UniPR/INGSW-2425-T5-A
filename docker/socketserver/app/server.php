@@ -66,16 +66,16 @@ class MyServer implements MessageComponentInterface {
 
 	public function onOpen(ConnectionInterface $conn) {
 		$this->clients->attach($conn);
-		$this->clientsRoom->attach($conn);
 	}
 
 	public function onMessage(ConnectionInterface $from, $msg) {
-		echo $msg."\n";
+		// echo $msg."\n";
 		$msg = json_decode($msg);
 		switch ($msg->code) {
 			case "connect":
 				if(isValidUsername($msg->data)) {
 					$this->clients[$from] = $msg->data;
+					echo "Client\t| $msg->data | Connected\n";
 				}
 				break;
 			case "create":
@@ -85,6 +85,7 @@ class MyServer implements MessageComponentInterface {
 					if($maxPlayers > 5 || $maxPlayers < 1) break;
 					$this->rooms[$id] = new Room($id, $maxPlayers);
 					$from->send(formatStr("room", $id));
+					echo "Room\t| $id | Created\n";
 				} catch (Error $err) {
 					echo $err."\n";
 				}
@@ -95,6 +96,7 @@ class MyServer implements MessageComponentInterface {
 					$room = $this->rooms[$id];
 					if(!$room->isStarted()) {
 						if($room->connect($from, $this->clients[$from])) {
+							$this->clientsRoom->attach($from);
 							$this->clientsRoom[$from] = $id;
 						} else {
 							$err = ["name" => "Stanza Piena",
@@ -115,7 +117,7 @@ class MyServer implements MessageComponentInterface {
 				if(array_key_exists($id, $this->rooms)) {
 					$room = $this->rooms[$id];
 					if($room->getCaptain() == $from && $room->isFull()) {
-						echo 'Room:'.$room->id.' Starting'."\n";
+						echo "Room\t| $room->id Starting\n";
 						$room->start();
 					}
 				}
@@ -201,6 +203,9 @@ class MyServer implements MessageComponentInterface {
 
 	public function onClose(ConnectionInterface $conn) {
 		if (!$this->clients->contains($conn)) return;
+		
+		$username = $this->clients[$conn];
+
 		if ($this->clientsRoom->contains($conn)) {
 			$id = $this->clientsRoom[$conn];
 			$this->clientsRoom->detach($conn);
@@ -208,12 +213,16 @@ class MyServer implements MessageComponentInterface {
 				$room = $this->rooms[$id];
 				$room->disconnect($conn);
 				if($room->isEmpty()) {
-					$room->stop();
+					if($room->isStarted())
+						$room->stop();
 					unset($this->rooms[$id]);
+					echo "Room\t| $room->id | Dropped\n";
 				}
 			}
 		}
 		$this->clients->detach($conn);
+		
+		echo "Client\t| $username | Disonnected\n";
 	}
 
 	public function onError(ConnectionInterface $conn, \Exception $e) {

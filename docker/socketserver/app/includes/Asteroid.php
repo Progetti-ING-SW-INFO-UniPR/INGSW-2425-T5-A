@@ -36,13 +36,14 @@ class Asteroid extends Entity{
      */
     public function drop(){
         $type = rng_drop();
+		// echo "Debug\t| Drop type: $type\n";
         if ($type == 0) return;
 
         $points = $this->points*pow(2,$this->rank);
         if ($type > 1)
             $points = $this->points*$this->rank; 
 
-        $i = new Item($this->velocity,$this->hitbox,$type,$points, $this->game);
+        $i = new Item($this->velocity, $this->hitbox, $type, $points, $this->game);
         $i->hitbox->set_width(ITEM_SIZE);
         $i->hitbox->set_heigth(ITEM_SIZE);
         $this->game->add_item($i);
@@ -55,11 +56,17 @@ class Asteroid extends Entity{
      * @see remove() rimuove l'asteroide dall'array.
      * @see add_asteroid() aggiunge gli asteroidi figli all'array.
      */
-    public function split(){
+    public function split($bullet_rank){
         $alfa = $this->velocity->get_alfa_deg();
         $norm = $this->velocity->get_norm();
 
-        $nb = new Box($this->hitbox->get_x(),$this->hitbox->get_y(),$this->hitbox->get_width()/2,$this->hitbox->get_height()/2);
+		$w = $this->hitbox->get_width()/$this->rank;
+		$h = $this->hitbox->get_height()/$this->rank;
+		$this->rank = $this->rank-$bullet_rank;
+		$w = $w*$this->rank;
+		$h = $h*$this->rank;
+
+        $nb = new Box($this->hitbox->get_x(),$this->hitbox->get_y(),$w,$h);
         $first = new Asteroid(new Vector($alfa+30,$norm),clone $nb,$this->rank, $this->points,$this->game);
         $second = new Asteroid(new Vector($alfa-30,$norm),clone $nb,$this->rank, $this->points,$this->game);
 
@@ -86,8 +93,7 @@ class Asteroid extends Entity{
                 $this->drop();
             }
             else {
-                $this->rank -= $e->get_rank();
-                $this->split();
+                $this->split($e->get_rank());
             }
         }
     }

@@ -49,11 +49,11 @@ function update(data) {
         else if(item.type == 1)
             drawAsset("points", item.x, item.y, item.w, item.h);
         else if(item.type == 2)
-            drawAsset("powerup_blue", item.x, item.y, item.w, item.h);
+            drawAsset("powerup_vel", item.x, item.y, item.w, item.h);
         else if(item.type == 3)
-            drawAsset("powerup_red", item.x, item.y, item.w, item.h);
+            drawAsset("powerup_rank", item.x, item.y, item.w, item.h);
         else if(item.type == 4)
-            drawAsset("powerup_green", item.x, item.y, item.w, item.h);
+            drawAsset("powerup_size", item.x, item.y, item.w, item.h);
     });
 
 	if(!isCaptain) {

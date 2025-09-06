@@ -173,28 +173,28 @@ class Spaceship extends Entity{
     public function on_collision(Entity $e)
     {
         if(is_a($e, 'Asteroid')) {
-			echo "Ship: {$this->game->get_ship()->get_hitbox()->get_json()}\n";
-			echo "Asteroid: {$e->get_hitbox()->get_json()}\n";
             $this->game->game_over();
 		}
         else if(is_a($e, 'Item')){
             switch($e->get_type()){
                 case 2: // bullet vel upgrade
-                    echo "B4 vel: {$this->ammo_type->get_velocity()}\n";
-                    $this->ammo_type->get_velocity()->sum_norm(5);
-                    echo "AFTER vel: {$this->ammo_type->get_velocity()}\n";
+                    // echo "Debug\t| vel: {$this->ammo_type->get_velocity()} -> ";
+                    $this->ammo_type->get_velocity()->set_norm($this->ammo_type->get_velocity()->get_norm()*1.25);
+                    // echo "".$this->ammo_type->get_velocity()."\n";
                     break;
                 case 3: // bullet rank upgrade
                     if($this->ammo_type->get_rank() < 3){
-                        echo "AFTER vel: {$this->ammo_type->get_velocity()}\n";
+                        // echo "Debug\t| rank: {$this->ammo_type->get_rank()} -> ";
                         $this->ammo_type->set_rank($this->ammo_type->get_rank()+1);
-                        echo "AFTER vel: {$this->ammo_type->get_velocity()}\n";}
+                        // echo "".$this->ammo_type->get_rank()."\n";
+					}
                     break;
                 case 4: // bullet size upgrade
-                    if($this->ammo_type->get_hitbox()->get_width()+10 < $this->hitbox->get_width()){
-                        echo "AFTER vel: {$this->ammo_type->get_velocity()}\n";
-                        $this->ammo_type->set_hitbox_comps(0,0,$this->ammo_type->get_hitbox()->get_width()+5,$this->ammo_type->get_hitbox()->get_height()+5);
-                        echo "AFTER vel: {$this->ammo_type->get_velocity()}\n";}
+                    if($this->ammo_type->get_hitbox()->get_width()*1.25 < $this->hitbox->get_width()){
+                        // echo "Debug\t| size: {$this->ammo_type->get_hitbox()->get_width()} -> ";
+                        $this->ammo_type->set_hitbox_comps(0,0,$this->ammo_type->get_hitbox()->get_width()*1.25,$this->ammo_type->get_hitbox()->get_height()*1.25);
+                        // echo "".$this->ammo_type->get_hitbox()->get_width()."\n";
+					}
                     break;
                 default: // non fa nulla
                     break;
