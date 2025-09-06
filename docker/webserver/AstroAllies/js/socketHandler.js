@@ -70,5 +70,19 @@ websocket.onmessage = (ev) => {
 		case "game":
 			update(msg.data);
 			break;
+		case "gameover":
+			setTimeout(()=>{
+				if (msg.data.status == "won") {
+					newAlert("Missione completata!", "Siete riusciti a portare a casa tutti i "+msg.data.score+" punti che avete raccolto!\n", 10, "green");
+				}
+				else if (msg.data.status == "lost") {
+					newAlert("Missione fallita!", "Dopo la collisione avete recuperato solo "+msg.data.score+" punti dalle macerie\n", 10, "err");
+				}
+			}, 1000);
+			setTimeout(()=>{
+				document.getElementById("room").hidden = false;
+				document.getElementById("game").hidden = true;
+			}, 5000);
+			break;
 	}
 };
