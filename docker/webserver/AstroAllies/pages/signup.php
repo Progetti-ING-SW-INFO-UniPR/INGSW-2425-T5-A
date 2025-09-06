@@ -66,6 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	$sqlMail = "SELECT * FROM Utente WHERE Email = ?;";
 	$sqlUser = "SELECT * FROM Utente WHERE Username = ?;";
 	$sqlReg = "INSERT INTO Utente (Username, Email, Password) VALUES (?, ?, ?)";
+	$pepe = getenv("PSW_PEPPER");
 	
 	$db = new Database();
 
@@ -80,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		} else {
 			if(isValidEmail($email) and isValidPassword($password) and isValidUsername($username)) {
 				try {
-					$result = $db->query($sqlReg, [$username, $email, password_hash($password . $db->pepe, PASSWORD_DEFAULT)]);
+					$result = $db->query($sqlReg, [$username, $email, password_hash($password . $pepe, PASSWORD_DEFAULT)]);
 
 					echo "<script> window.location.href='/pages/login.php' </script>";
 				} catch(Exception $err) {

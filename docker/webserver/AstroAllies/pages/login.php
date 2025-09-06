@@ -11,7 +11,6 @@ require_once __DIR__ . "/./../includes/credentialChecks.php";
 	<link rel="stylesheet" href="../css/main.css">
 	<link rel="stylesheet" href="../css/login.css">
 	<script src="../js/main.js"></script>
-	<script src="../js/login.js"></script>
 </head>
 <body>
 	<div class="bg">
@@ -46,6 +45,9 @@ require_once __DIR__ . "/./../includes/credentialChecks.php";
 		</div>
 		<input type="submit" id="logSubmit" hidden>
 	</div>
+	<footer>
+		<script src="../js/login.js"></script>
+	</footer>
 </body>
 </html>
 <?php
@@ -53,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	$email = $_POST["email"];
 	$password = $_POST["password"];
 	$sqlMail = "SELECT * FROM Utente WHERE Email = ?;";
+	$pepe = getenv("PSW_PEPPER");
 
 	$db = new Database();
 
@@ -60,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	
 	if ($result && $result->num_rows > 0) {
 		$row = $result->fetch_row();
-		if (password_verify($password . $db->pepe, $row["Password"])) {
+		if (password_verify($password . $pepe, $row["Password"])) {
 			$_SESSION["USERNAME"] = $row["Username"];
 			echo "<script>window.location.href = './index.php'</script>";
 		} else {

@@ -6,16 +6,28 @@ class Database
     private $password;
     private $dbname;
     private $connection;
-	public readonly string $pepe;
 
-    public function __construct()
+    public function __construct($host = null, $username = null, $password = null, $dbname = null)
     {
-        $this->host = getenv('MYSQL_HOST');
-        $this->username = getenv('MYSQL_USER');
-        $this->password = getenv('MYSQL_PASSWORD');
-        $this->dbname = getenv('MYSQL_DATABASE');
-		// $this->pepe = getenv('PSWD_PEPE');
-		$this->pepe = "2ry89^";
+		if(!$host)
+			$this->host = getenv('MYSQL_HOST');
+		else
+			$this->host = $host;
+
+		if(!$username)
+        	$this->username = getenv('MYSQL_USER');
+        else
+			$this->username = $username;
+		
+		if(!$password)
+			$this->password = getenv('MYSQL_PASSWORD');
+		else
+			$this->password = $password;
+		
+		if(!$dbname)
+        	$this->dbname = getenv('MYSQL_DATABASE');
+        else
+			$this->dbname = $dbname;
 
 
         $this->connect();
@@ -23,7 +35,6 @@ class Database
 
     private function connect()
     {
-        // echo "Tentativo di connessione a {$this->host}, {$this->username}, {$this->dbname}...<br>";
         $this->connection = new mysqli($this->host, $this->username, $this->password, $this->dbname);
 
         if ($this->connection->connect_error) {

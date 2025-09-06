@@ -5,7 +5,6 @@ RUN a2enmod ssl rewrite proxy proxy_http proxy_wstunnel
 RUN apt-get update && apt-get install -y \
     iputils-ping traceroute curl openssh-server default-mysql-client && \
     docker-php-ext-install mysqli && \
-	docker-php-ext-install sockets && \
     docker-php-ext-enable mysqli && \
     mkdir /var/run/sshd -p
 
