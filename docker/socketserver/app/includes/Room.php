@@ -4,6 +4,7 @@ use Ratchet\ConnectionInterface;
 use React\EventLoop\Loop;
 use React\EventLoop\TimerInterface;
 require_once 'Game.php';
+require_once 'Database.php';
 
 //VECTOR 
 $VECTOR = new Vector(0,0);
@@ -39,7 +40,6 @@ class Room {
 	private SplObjectStorage $clients;
 	private ConnectionInterface $captain;
 	private Game $game;
-	private bool $started;
 	private int $maxPlayers;
 	private TimerInterface $loop;
 	
@@ -47,7 +47,6 @@ class Room {
 	public function __construct($id, $maxPlayers)
 	{
 		$this->clients = new SplObjectStorage();
-		$this->started = false;
 		$this->id = $id;
 		$this->maxPlayers = $maxPlayers;
 	}
@@ -57,7 +56,6 @@ class Room {
 		$this->clients[$socket] = $username;
 		if($this->clients->count() == 1) {
 			$this->captain = $socket;
-			$this->send('{"code": "captain", "data":"'.$this->clients[$this->captain].'"}');
 		}
 	}
 
@@ -109,30 +107,66 @@ class Room {
 		return $this->captain;
 	}
 
+	public function mainloop() {
+		$this->game->update();
+		switch ($this->game->get_status()) {
+			case Status::Running:
+				break;
+			case Status::Lost:
+			case Status::Won:
+				$data = [
+					"status" => $this->game->get_status()->value,
+					"score" => $this->game->get_score()
+				];
+				$this->send(formatData("gameover", $data));
+				$this->updateScores();
+				$this->stop();
+				return;
+			case Status::Pause:
+				break;
+		}
+		$json = $this->game->get_json();
+		$this->send(formatJson("game", $json));
+	}
+
+	private function updateScores() {
+		$db = new Database();
+		$query = "UPDATE Utente SET Punteggio = Punteggio + ? WHERE Username = ?";
+		foreach ($this->clients as $client) {
+			$db->query($query, [$this->game->get_score(), $this->clients[$client]]);
+		}
+	}
+
 	public function start() {
 		global $PLAYING_FIELD, $SPAWNING_FIELD, $EXFIL_AREA, $FRICTION, $SPACESHIP, $ASTEROID_SIZE, $POINT;
+		if($this->isStarted()) {
+			if($this->game->get_status() == Status::Running) {
+				return;
+			}
+			if($this->game->get_status() == Status::Pause) {
+				$this->game->toggle_pause();
+				return;
+			}
+		}
 		$this->game = new Game($this->id, $PLAYING_FIELD->deep_copy(), $SPAWNING_FIELD->deep_copy(), $EXFIL_AREA->deep_copy(), $FRICTION, $SPACESHIP->deep_copy(), $ASTEROID_SIZE, $POINT);
-		$this->started = true;
-		$room = $this;
-		$game = $this->game;
-		foreach ($this->clients as $sock)
+		foreach ($this->clients as $sock) {
 			$this->game->set_communication($this->clients[$sock], 0);
-		echo "Room\t| $room->id | Started\n";
+		}
+		echo "Room\t| $this->id | Started\n";
+
 		$this->send(formatStr("start", ""));
-		$this->loop = Loop::addPeriodicTimer(1/30, function () use ($room, $game){
-			$game->update();
-			$json = $game->get_json();
-			$room->send(formatJson("game", $json));
-		});
+		$room = $this;
+		$this->loop = Loop::addPeriodicTimer(1/30, function () use ($room) {$room->mainloop();});
 	}
 
 	public function stop() {
 		Loop::cancelTimer($this->loop);
+		unset($this->game);
 		echo "Room\t| $this->id | Stopped\n";
 	}
 
 	public function isStarted() {
-		return $this->started;
+		return isset($this->game);
 	}
 
 	public function send($message) {
