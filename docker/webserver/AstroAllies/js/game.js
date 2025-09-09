@@ -249,7 +249,6 @@ function drawStatus(status){
 
 /*********** CONTROLLER ***********/
 
-//attaccare add event listener window 
 function captainKeyDown(KeyboardEvent){
     const commands = ["KeyW", "KeyA","KeyS","KeyD",
                       "ArrowUp","ArrowLeft","ArrowDown","ArrowRight","Space",
