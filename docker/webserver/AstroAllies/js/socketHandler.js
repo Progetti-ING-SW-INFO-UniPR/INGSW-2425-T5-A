@@ -31,7 +31,7 @@ websocket.onopen = () => {
 
 
 websocket.onmessage = (ev) => {
-	console.log(ev.data);
+	// console.log(ev.data);
 	let msg = JSON.parse(ev.data);
 	switch (msg.code) {
 		case "error":
