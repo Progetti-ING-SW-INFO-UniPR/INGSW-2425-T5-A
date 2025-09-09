@@ -238,7 +238,7 @@ function drawComms(user, type, pos) {
     g.restore();
 }  
 
-// TODO
+
 function drawStatus(status){
     g.font = "40px Arial";
     g.fillStyle = "white";
